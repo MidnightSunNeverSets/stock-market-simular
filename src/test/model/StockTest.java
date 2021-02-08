@@ -56,7 +56,7 @@ class StockTest {
     }
 
     @Test
-    public void testThatAskIsGreaterThanAsk() {
+    public void testThatAskIsGreaterThanBid() {
         int timesBidIsGreaterThanAsk = 0;
 
         for (int i = 0; i< 10; i++) {
@@ -86,6 +86,5 @@ class StockTest {
     public double round(double num) {
         return Math.round(num * 100.0) / 100.0;
     }
-
 
 }

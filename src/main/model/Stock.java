@@ -26,6 +26,10 @@ public class Stock {
     }
 
     // getters
+    public String getName() {
+        return name;
+    }
+
     public double getCurrentValue() {
         return currentValue;
     }
@@ -90,6 +94,22 @@ public class Stock {
     private double round(double num) {
         return Math.round(num * 100.0) / 100.0;
     }
+
+    //    // EFFECTS: prints out the stock details in the format:
+//    //          'Company Name'
+//    //          'Current Value'
+//    //          'Bid Price'
+//    //          'Ask Price'
+//    //          'Spread'
+//    //          'Change Percentage'
+//    public void printStockDetails() {
+//        System.out.println(name);
+//        System.out.printf("   Current Value: $%.2f\n", currentValue);
+//        System.out.printf("   Bid: $%.2f\n", bidPrice);
+//        System.out.printf("   Ask: $%.2f\n", askPrice);
+//        System.out.printf("   Spread: $%.2f\n", askPrice - bidPrice);
+//        System.out.printf("   Change Percentage: %.2f%%\n", percentChange);
+//    }
 
 
 
