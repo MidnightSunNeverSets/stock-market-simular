@@ -83,7 +83,7 @@ class StockTest {
         assertTrue(10 == stock.getSharesPurchased());
     }
 
-    public double round(double num) {
+    private double round(double num) {
         return Math.round(num * 100.0) / 100.0;
     }
 

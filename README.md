@@ -23,4 +23,5 @@ but without the parts involving actual financial ruin.
 - As a user, I want to be able to check the current stock value
 - As a user, I want to be able to check the current ask price of the stock
 - As a user, I want to be able to check the current bid price of the stock 
+- As a user, I want to be able to sell shares
 - As a user, I want to be able to check the daily percentage change of the stock

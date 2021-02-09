@@ -4,11 +4,12 @@ import java.util.Random;
 
 // Represents a company's stock with its name, bid price, ask price, current value and percentage change
 public class Stock {
+    protected double currentValue;
+    protected double askPrice;
+    protected double bidPrice;
+    protected double percentChange;
+
     private String name;
-    private double currentValue;
-    private double askPrice;
-    private double bidPrice;
-    private double percentChange;
     private int sharesPurchased;
     private Random rand = new Random();
 
@@ -94,23 +95,6 @@ public class Stock {
     private double round(double num) {
         return Math.round(num * 100.0) / 100.0;
     }
-
-    //    // EFFECTS: prints out the stock details in the format:
-//    //          'Company Name'
-//    //          'Current Value'
-//    //          'Bid Price'
-//    //          'Ask Price'
-//    //          'Spread'
-//    //          'Change Percentage'
-//    public void printStockDetails() {
-//        System.out.println(name);
-//        System.out.printf("   Current Value: $%.2f\n", currentValue);
-//        System.out.printf("   Bid: $%.2f\n", bidPrice);
-//        System.out.printf("   Ask: $%.2f\n", askPrice);
-//        System.out.printf("   Spread: $%.2f\n", askPrice - bidPrice);
-//        System.out.printf("   Change Percentage: %.2f%%\n", percentChange);
-//    }
-
 
 
 }

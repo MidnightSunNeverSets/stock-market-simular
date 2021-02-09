@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
+// represents the market from which stocks are purchased from, includes all the stocks
 public class Market {
 
     private ArrayList<Stock> catalogue;
@@ -19,7 +20,8 @@ public class Market {
         }
     }
 
-    // REQUIRES: company name is spelled correctly
+
+    // REQUIRES: company name is spelled correctly and a corresponding stock exists
     // EFFECTS: returns the stock given the company name
     public Stock lookUpStock(String name) {
         int index = catalogueNames.indexOf(name);
@@ -42,15 +44,26 @@ public class Market {
         return false;
     }
 
+    // MODIFIES: this, STOCK
+    // EFFECTS: has the stock market go to the next day
     public void nextDay() {
         for (Stock s: catalogue) {
             s.nextDay();
         }
     }
 
-//    // EFFECTS: prints out the specified stock's details
-//    public void printStockDetails(String name) {
-//        getStock(name).printStockDetails();
-//    }
+    // for testing
 
+    // EFFECTS: returns all the stocks in the market
+    public ArrayList<Stock> getCatalogue() {
+        return catalogue;
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: adds a stock to the market
+    public void addStock(Stock stock) {
+        catalogue.add(stock);
+        catalogueNames.add(stock.getName());
+    }
 }

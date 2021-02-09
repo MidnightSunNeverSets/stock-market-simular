@@ -2,7 +2,7 @@ package model;
 
 import java.util.ArrayList;
 
-// Represents the stocks the user has purchased
+// Represents the stocks the user has purchased and their money
 public class Portfolio {
 
     public static final double INITIAL_BALANCE = 100000;
@@ -52,25 +52,5 @@ public class Portfolio {
             stocksOwned.add(stock);
         }
     }
-
-//    // EFFECTS: prints stocks owned in format:
-//    //          'Company Name, Shares Owned'
-//    public String printStocksOwned() {
-//        if (stocks.isEmpty()) {
-//            System.out.println("Your portfolio is currently empty.");
-//        } else {
-//            for (Stock s : stocks) {
-//                System.out.printf("%s, %d Shares\n", s.getName(), s.getSharesPurchased());
-//            }
-//        }
-//    }
-
-//    public void printDetailsOfStocksOwned() {
-//        for (Stock s : stocks) {
-//            s.printStockDetails();
-//            System.out.println(s.getSharesPurchased());
-//            System.out.println();
-//        }
-//    }
 
 }
