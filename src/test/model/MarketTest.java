@@ -27,22 +27,30 @@ public class MarketTest {
     }
 
     @Test
-    public void testPurchaseSharesAboveBoundary() {
+    public void testPurchaseSharesWithMoreThanEnoughMoney() {
+        Stock stock = market.lookUpStock("a");
+
         assertTrue(market.purchaseShares("a", 10, portfolio));
+        assertTrue(stock.getSharesPurchased() == 10);
     }
 
     @Test
-    public void testPurchaseSharesBelowBoundary() {
+    public void testPurchaseSharesWithNotEnoughMoney() {
+       Stock stock = market.lookUpStock("b");
+
         portfolio.addOrSubtractFromBalance(-9000);
         assertFalse(market.purchaseShares("b", 100000, portfolio));
         assertTrue(portfolio.getBalance() == (portfolio.INITIAL_BALANCE - 9000));
+        assertTrue(stock.getSharesPurchased() == 0);
     }
 
     @Test
-    public void testPurchaseSharesAtBoundary() {
-        double askPrice = market.lookUpStock("b").getAskPrice();
-        portfolio.setBalance(askPrice);
+    public void testPurchaseSharesWithJustEnoughMoney() {
+        Stock stock = market.lookUpStock("b");
+
+        portfolio.setBalance(stock.getAskPrice());
         assertTrue(market.purchaseShares("b", 1, portfolio));
+        assertTrue(stock.getSharesPurchased() == 1);
     }
 
     @Test
@@ -77,6 +85,42 @@ public class MarketTest {
 
         assertTrue(s3.getAskPrice() == 101);
         assertTrue(s3.getBidPrice() == 89);
+
+    }
+
+    @Test
+    public void testSellShares() {
+        Stock s1 = market.lookUpStock("a");
+        Stock s2 = market.lookUpStock("b");
+        Stock s3 = market.lookUpStock("c");
+
+        double previousBalance;
+
+        market.purchaseShares("a", 2, portfolio);
+        market.purchaseShares("b", 3, portfolio);
+
+        previousBalance = portfolio.getBalance();
+
+        // when there are sufficient shares owned
+        assertEquals("2 shares from a have been sold.", market.sellShares("a", 2, portfolio));
+        assertTrue(s1.getSharesPurchased() == 0);
+        assertTrue(portfolio.getBalance() == (previousBalance + s1.getAskPrice() * 2));
+
+
+        // when there are insufficient shares owned
+        previousBalance = portfolio.getBalance();
+
+        market.sellShares("b", 4, portfolio);
+        assertEquals("Are you sure you entered the correct amount? You currently don't own 4 shares in b.",
+                market.sellShares("b", 4, portfolio));
+        assertTrue(s2.getSharesPurchased() == 3);
+        assertTrue(portfolio.getBalance() == previousBalance);
+
+        // when no shares are owned
+        assertEquals("Are you sure you entered the correct company? You currently don't own any shares in c.",
+                market.sellShares("c", 3, portfolio));
+        assertTrue(s3.getSharesPurchased() == 0);
+        assertTrue(portfolio.getBalance() == previousBalance);
 
     }
 

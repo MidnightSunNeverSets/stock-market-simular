@@ -22,8 +22,12 @@ public class Portfolio {
         return balance;
     }
 
-    public ArrayList<String> getStocksOwned() {
+    public ArrayList<String> getStocksOwnedInfo() {
         return stockInfo;
+    }
+
+    public ArrayList<Stock> getStocksOwned() {
+        return stocksOwned;
     }
 
     // setters

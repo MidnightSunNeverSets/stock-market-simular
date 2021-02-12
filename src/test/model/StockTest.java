@@ -83,6 +83,69 @@ class StockTest {
         assertTrue(10 == stock.getSharesPurchased());
     }
 
+    @Test
+    public void testRemoveShares() {
+        stock.purchaseShares(100);
+
+        // when there are sufficient shares
+        assertTrue(stock.removeShares(10));
+        assertTrue(stock.getSharesPurchased() == 90);
+
+        assertTrue(stock.removeShares(90));
+        assertTrue(stock.getSharesPurchased() == 0);
+
+        // when there are insufficient shares
+        assertFalse(stock.removeShares(5));
+        assertTrue(0 == stock.getSharesPurchased());
+
+        stock.purchaseShares(20);
+        assertFalse(stock.removeShares(21));
+        assertTrue(20 == stock.getSharesPurchased());
+    }
+
+
+
+    @Test
+    public void testGenerateBid() {
+        double spread = stock.getAskPrice() - stock.getBidPrice();
+        double previousBid;
+
+        // when rise in bid is equal to spread
+        stock.generateBid(true, spread);
+        assertTrue(stock.getBidPrice() < stock.getAskPrice());
+
+        // when rise in bid is greater than spread
+        previousBid = stock.getBidPrice();
+        stock.generateBid(true, spread + 10);
+        assertTrue(stock.getBidPrice() < stock.getAskPrice());
+
+        // when rise in bid is less than spread
+        spread = stock.getAskPrice() - stock.getBidPrice();
+        previousBid = stock.getBidPrice();
+        stock.generateBid(true, spread - 2);
+        assertTrue(stock.getBidPrice() == (previousBid + (spread - 2)));
+
+        // when bid decreases
+        previousBid = stock.getBidPrice();
+        stock.generateBid(false, spread);
+        assertTrue(stock.getBidPrice() == (previousBid - spread));
+    }
+
+    @Test
+    public void testGenerateAsk() {
+        double previousAsk = stock.getAskPrice();
+
+        // rise in ask
+        stock.generateAsk(true, 5);
+        assertTrue(stock.getAskPrice() == (previousAsk + 5));
+
+        // decrease in ask
+        previousAsk = stock.getAskPrice();
+        stock.generateAsk(false, 5);
+        assertTrue(stock.getAskPrice() == (previousAsk - 5));
+
+    }
+
     private double round(double num) {
         return Math.round(num * 100.0) / 100.0;
     }

@@ -58,6 +58,20 @@ public class Stock {
         sharesPurchased += amount;
     }
 
+    // REQUIRES: amount > 0
+    // MODIFIES: this
+    // EFFECTS: if there are sufficient shares
+    //            - subtract amount of shares from the number of purchased shares
+    //            - return true
+    //          otherwise return false
+    public boolean removeShares(int amount) {
+        if (sharesPurchased >= amount) {
+            sharesPurchased -= amount;
+            return true;
+        }
+        return false;
+    }
+
     // MODIFIES: this
     // EFFECTS: sets new values for the stock value, ask price, bid price
     //          calculates the percentage change
@@ -67,15 +81,24 @@ public class Stock {
         boolean bidRises = rand.nextBoolean();
         double changeInAsk = rand.nextInt(3) + round(rand.nextDouble());
         double changeInBid = rand.nextInt(3) + round(rand.nextDouble());
-        double spread; // the bid-ask spread
 
-        if (askRises) {
-            askPrice += changeInAsk;
-        } else {
-            askPrice -= changeInAsk;
-        }
+        // generates ask price
+        generateAsk(askRises, changeInAsk);
 
-        spread = askPrice - bidPrice;
+        // generates bid price
+        generateBid(bidRises, changeInBid);
+
+        currentValue = round((askPrice + bidPrice) / 2);
+        percentChange = round((currentValue - previousValue) / previousValue * 100);
+    }
+
+    // for testing
+
+    // REQUIRES: changeInBid is > 0
+    // MODIFIES: this
+    // EFFECTS: randomly generates a new bid price that is always below the ask price
+    protected void generateBid(boolean bidRises, double changeInBid) {
+        double spread = askPrice - bidPrice;
 
         if (bidRises) {
             // ensures that bid is never greater than ask
@@ -86,9 +109,17 @@ public class Stock {
         } else {
             bidPrice -= changeInBid;
         }
+    }
 
-        currentValue = round((askPrice + bidPrice) / 2);
-        percentChange = round((currentValue - previousValue) / previousValue * 100);
+    // REQUIRES: changeInAsk > 0
+    // MODIFIES: this
+    // EFFECTS: randomly generates a new ask price
+    protected void generateAsk(boolean askRises, double changeInAsk) {
+        if (askRises) {
+            askPrice += changeInAsk;
+        } else {
+            askPrice -= changeInAsk;
+        }
     }
 
     // EFFECTS: rounds numbers to two decimal places

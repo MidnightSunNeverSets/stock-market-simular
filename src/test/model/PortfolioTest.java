@@ -3,8 +3,6 @@ package model;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 public class PortfolioTest {
@@ -22,11 +20,11 @@ public class PortfolioTest {
         portfolio.addStock(s1);
         portfolio.addStock(s2);
 
-        assertEquals(s1.getName() + ", " + s1.getSharesPurchased(), portfolio.getStocksOwned().get(0));
-        assertEquals(s2.getName() + ", " + s1.getSharesPurchased(), portfolio.getStocksOwned().get(1));
+        assertEquals(s1.getName() + ", " + s1.getSharesPurchased(), portfolio.getStocksOwnedInfo().get(0));
+        assertEquals(s2.getName() + ", " + s1.getSharesPurchased(), portfolio.getStocksOwnedInfo().get(1));
 
         portfolio.addStock(s1);
-        assertEquals(2, portfolio.getStocksOwned().size());
+        assertEquals(2, portfolio.getStocksOwnedInfo().size());
     }
 
     @Test

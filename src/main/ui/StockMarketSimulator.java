@@ -9,7 +9,6 @@ import java.util.Scanner;
 // Stock market simulator application
 public class StockMarketSimulator {
 
-
     private final String[] companies = {"Shibe Inc.", "Papaya", "Tweety", "GuCCe", "MIYO"};
     private Scanner input;
     private Market stockMarket;
@@ -72,13 +71,13 @@ public class StockMarketSimulator {
         } else if (command == 2) {
             printAllStockDetails();
         } else if (command == 3) {
-            System.out.printf("Balance: $%.2f\n", portfolio.getBalance());
+            System.out.printf("Balance: $%.2f\n\n", portfolio.getBalance());
         } else if (command == 4) {
             purchaseShares();
         } else if (command == 5) {
-            System.out.println();
+            sellShares();
         } else if (command == 6) {
-            System.out.println(portfolio.getStocksOwned());
+            System.out.println(portfolio.getStocksOwnedInfo());
         } else if (command == 7) {
             stockMarket.nextDay();
             System.out.println("Ready to start a new day?");
@@ -118,7 +117,7 @@ public class StockMarketSimulator {
     }
 
     // REQUIRES: orderAmount > 0, companyName is spelled correctly, market and portfolio are not null
-    // MODIFIES: this, Stock, Portfolio
+    // MODIFIES: this, Market, Stock, Portfolio
     // EFFECTS:
     private void purchaseShares() {
         System.out.print("What company would you like to purchase shares from?: ");
@@ -126,11 +125,29 @@ public class StockMarketSimulator {
         System.out.print("How many shares would you like to purchase? ");
         int sharesResponse = input.nextInt();
 
+        input.nextLine();
+
         if (stockMarket.purchaseShares(companyNameResponse, sharesResponse, portfolio)) {
             System.out.printf("Successfully purchased %d shares from %s\n", sharesResponse, companyNameResponse);
         } else {
             System.out.println("Purchase unsuccessful. Insufficient funds. Check your account balance.");
         }
+        System.out.println();
+    }
+
+    // REQUIRES: orderAmount > 0, companyName is spelled correctly, market and portfolio are not null
+    // MODIFIES: this, Market, Stock, Portfolio
+    // EFFECTS: sells shares at the ask price
+    private void sellShares() {
+        System.out.print("Which stock would you like to sell? (Enter name of company): ");
+        String companyNameResponse = input.nextLine();
+        System.out.print("How many shares would you like to sell?: ");
+        int sharesResponse = input.nextInt();
+
+        input.nextLine();
+
+        System.out.println(stockMarket.sellShares(companyNameResponse, sharesResponse, portfolio));
+        System.out.println();
     }
 
 }

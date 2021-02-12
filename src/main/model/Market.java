@@ -44,12 +44,35 @@ public class Market {
         return false;
     }
 
-    // MODIFIES: this, STOCK
+    // MODIFIES: this, Stock
     // EFFECTS: has the stock market go to the next day
     public void nextDay() {
         for (Stock s: catalogue) {
             s.nextDay();
         }
+    }
+    
+    // REQUIRES: company name is spelt correctly
+    // MODIFIES: this, Portfolio, Stock
+    // EFFECTS: if the stock is in the portfolio and there are sufficient shares owned:
+    //               - sell the specified number of shares at the ask price
+    //               - return receipt confirming transaction and number of shares sold
+    //          else if stock is in the portfolio but the amount desiring to be sold exceeds the shares owned:
+    //               - return notice that they are selling more than they own
+    //          otherwise return statement that holder does not own shares in the specified stock
+    public String sellShares(String name, int amount, Portfolio portfolio) {
+        Stock stock = lookUpStock(name);
+        if (portfolio.getStocksOwned().contains(stock)) {
+            if (stock.removeShares(amount)) {
+                portfolio.addOrSubtractFromBalance(amount * stock.getAskPrice());
+                stock.removeShares(amount);
+                return Integer.toString(amount) + " shares from " + name + " have been sold.";
+            } else {
+                return "Are you sure you entered the correct amount? You currently don't own "
+                        + Integer.toString(amount) + " shares in " + name + ".";
+            }
+        }
+        return "Are you sure you entered the correct company? You currently don't own any shares in " + name + ".";
     }
 
     // for testing
