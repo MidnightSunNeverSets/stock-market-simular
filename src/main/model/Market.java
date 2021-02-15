@@ -51,7 +51,7 @@ public class Market {
             s.nextDay();
         }
     }
-    
+
     // REQUIRES: company name is spelt correctly
     // MODIFIES: this, Portfolio, Stock
     // EFFECTS: if the stock is in the portfolio and there are sufficient shares owned:

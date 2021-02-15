@@ -14,7 +14,7 @@ market. When it comes to money, my knowledge of finances, and really anything in
 Therefore, by basing the project around the stock exchange, I will be forced to put in the necessary research to 
 understand its terminology and mechanics. Moreover, in light of the recent GME trading mania, I've also realized that 
 I've always wanted to experience the thrill of betting one's life savings on high-risk trades and losing everything, 
-but without the parts involving actual financial ruin.   
+just without the parts involving actual financial ruin.   
 
 
 ## User Stories
@@ -25,3 +25,4 @@ but without the parts involving actual financial ruin.
 - As a user, I want to be able to check the current bid price of the stock 
 - As a user, I want to be able to sell shares
 - As a user, I want to be able to check the daily percentage change of the stock
+- As a user, I want to be able to forward the stock market to the next day
