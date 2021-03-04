@@ -1,12 +1,16 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 
 // represents the market from which stocks are purchased from, includes all the stocks
-public class Market {
+public class Market implements Writable {
 
     private ArrayList<Stock> catalogue;
-    private ArrayList<String> catalogueNames;
+    protected ArrayList<String> catalogueNames;
 
     // REQUIRES: companyNames is non-empty
     // MODIFIES: this
@@ -20,6 +24,13 @@ public class Market {
         }
     }
 
+    // REQUIRES: companyNames is empty
+    // EFFECTS: creates an empty catalogue, sets catalogueNames
+    public Market() {
+        catalogue = new ArrayList<>();
+        catalogueNames = new ArrayList<>();
+    }
+
 
     // REQUIRES: company name is spelled correctly and a corresponding stock exists
     // EFFECTS: returns the stock given the company name
@@ -31,7 +42,11 @@ public class Market {
 
     // REQUIRES: orderAmount > 0, companyName is spelled correctly
     // MODIFIES: Stock, Portfolio
-    // EFFECTS:
+    // EFFECTS: determines the cost of the shares for purchase
+    //          if user has enough balance
+    //               - adds stock to portfolio
+    //               - returns true
+    //          else return false
     public boolean purchaseShares(String companyName, int orderAmount, Portfolio portfolio) {
         double cost = Math.round(100.0 * lookUpStock(companyName).getAskPrice() * orderAmount) / 100.0;
 
@@ -66,13 +81,26 @@ public class Market {
             if (stock.removeShares(amount)) {
                 portfolio.addOrSubtractFromBalance(amount * stock.getAskPrice());
                 stock.removeShares(amount);
-                return Integer.toString(amount) + " shares from " + name + " have been sold.";
+                return amount + " shares from " + name + " have been sold.";
             } else {
                 return "Are you sure you entered the correct amount? You currently don't own "
-                        + Integer.toString(amount) + " shares in " + name + ".";
+                        + amount + " shares in " + name + ".";
             }
         }
         return "Are you sure you entered the correct company? You currently don't own any shares in " + name + ".";
+    }
+
+    // EFFECTS: converts stock catalogue to a JSONArray and places it in a JSONObject
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        JSONArray jsonArr = new JSONArray();
+        for (Stock s: catalogue) {
+            jsonArr.put(s.toJson());
+        }
+
+        json.put("stock catalogue", jsonArr);
+        return json;
     }
 
     // for testing

@@ -1,9 +1,12 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.Random;
 
 // Represents a company's stock with its name, bid price, ask price, current value and percentage change
-public class Stock {
+public class Stock implements Writable {
     protected double currentValue;
     protected double askPrice;
     protected double bidPrice;
@@ -24,6 +27,18 @@ public class Stock {
         currentValue = round((bidPrice + askPrice) / 2);
         percentChange = 0.0;
         sharesPurchased = 0;
+    }
+
+    // EFFECTS: takes in the company name, ask price, bid price, current value, percent change and shares purchased,
+    //          and sets the stock to match the values
+    public Stock(String name, double askPrice, double bidPrice, double currentValue, double percentChange,
+                 int sharesPurchased) {
+        this.name = name;
+        this.askPrice = askPrice;
+        this.bidPrice = bidPrice;
+        this.currentValue = currentValue;
+        this.percentChange = percentChange;
+        this.sharesPurchased = sharesPurchased;
     }
 
     // getters
@@ -111,6 +126,20 @@ public class Stock {
         }
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+
+        json.put("company", name);
+        json.put("current value", currentValue);
+        json.put("ask value", askPrice);
+        json.put("bid value", bidPrice);
+        json.put("percentage change", percentChange);
+        json.put("shares purchased", sharesPurchased);
+
+        return json;
+    }
+
     // REQUIRES: changeInAsk > 0
     // MODIFIES: this
     // EFFECTS: randomly generates a new ask price
@@ -122,10 +151,10 @@ public class Stock {
         }
     }
 
+
     // EFFECTS: rounds numbers to two decimal places
     private double round(double num) {
         return Math.round(num * 100.0) / 100.0;
     }
-
 
 }

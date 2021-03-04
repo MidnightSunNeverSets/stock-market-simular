@@ -26,3 +26,5 @@ just without the parts involving actual financial ruin.
 - As a user, I want to be able to sell shares
 - As a user, I want to be able to check the daily percentage change of the stock
 - As a user, I want to be able to forward the stock market to the next day
+- As a user, I want to be able to save my portfolio when I exit
+- As a user, I want to be able to choose between reloading a previous portfolio or starting a new one

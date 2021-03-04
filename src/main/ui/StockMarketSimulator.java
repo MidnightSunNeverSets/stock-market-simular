@@ -3,23 +3,33 @@ package ui;
 import model.Market;
 import model.Portfolio;
 import model.Stock;
+import persistence.JsonWriter;
 
+import java.awt.*;
+import java.io.FileNotFoundException;
 import java.util.Scanner;
 
 // Stock market simulator application
 public class StockMarketSimulator {
 
-    private final String[] companies = {"Shibe Inc.", "Papaya", "Tweety", "GuCCe", "MIYO"};
+    private static final String JSON_PORTFOLIO = "./data/portfolio.json";
+    private static final String JSON_MARKET = "./data/market.json";
+    private final String[] companies = {"Shibe Inc.", "Papaya", "Tweety", "GuCCe", "MIYO", "Yoko"};
+
     private Scanner input;
     private Market stockMarket;
     private Portfolio portfolio;
     private boolean keepPlaying;
+    private JsonWriter portfolioJsonWriter;
+    private JsonWriter marketJsonWriter;
 
     // EFFECTS: runs the simulator
     public StockMarketSimulator() {
         input = new Scanner(System.in);
         stockMarket = new Market(companies);
         portfolio = new Portfolio();
+        portfolioJsonWriter = new JsonWriter(JSON_PORTFOLIO);
+        marketJsonWriter = new JsonWriter(JSON_MARKET);
         runSimulator();
     }
 
@@ -82,13 +92,42 @@ public class StockMarketSimulator {
             stockMarket.nextDay();
             System.out.println("Ready to start a new day?");
         } else if (command == 8) {
-            System.out.println("Thanks for playing! :)");
-            keepPlaying = false;
+            endGame();
         } else {
             System.out.println("The command you entered doesn't exist. Please enter another one.");
         }
 
     }
+
+    // EFFECTS: end ths game
+    private void endGame() {
+        System.out.println("Thanks for playing! :)");
+        keepPlaying = false;
+        saveProgress();
+    }
+
+    // EFFECTS: saves the market and portfolio to file
+    private void saveProgress() {
+        try {
+            marketJsonWriter.open();
+            marketJsonWriter.write(stockMarket);
+            marketJsonWriter.close();
+            System.out.println("Saved market.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write market to file.");
+        }
+
+        try {
+            portfolioJsonWriter.open();
+            portfolioJsonWriter.write(portfolio);
+            portfolioJsonWriter.close();
+            System.out.println("Saved portfolio.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write portfolio to file.");
+        }
+
+    }
+
 
     // EFFECTS: prints out stock details in the format:
     //          'company name'
@@ -118,7 +157,8 @@ public class StockMarketSimulator {
 
     // REQUIRES: orderAmount > 0, companyName is spelled correctly, market and portfolio are not null
     // MODIFIES: this, Market, Stock, Portfolio
-    // EFFECTS:
+    // EFFECTS: purchases amount of shares specified by user for a company
+    //          prints out separate statements if purchase is successful or unsuccessful
     private void purchaseShares() {
         System.out.print("What company would you like to purchase shares from?: ");
         String companyNameResponse = input.nextLine();

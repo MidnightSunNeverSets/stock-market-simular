@@ -1,5 +1,7 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +18,13 @@ public class MarketTest {
         String[] companies = {"a", "b", "c"};
         portfolio = new Portfolio();
         market = new Market(companies);
+    }
+
+    @Test
+    public void testAlternateConstructor() {
+        market = new Market();
+        assertTrue(market.getCatalogue().size() == 0);
+        assertTrue(market.catalogueNames.size() == 0);
     }
 
     @Test
@@ -121,6 +130,32 @@ public class MarketTest {
                 market.sellShares("c", 3, portfolio));
         assertTrue(s3.getSharesPurchased() == 0);
         assertTrue(portfolio.getBalance() == previousBalance);
+
+    }
+
+    @Test
+    public void testToJson() {
+        JSONObject json = market.toJson();
+        JSONArray jsonArr = json.getJSONArray("stock catalogue");
+        ArrayList<Stock> catalogue = market.getCatalogue();
+
+        assertTrue(jsonArr.length() == 3);
+
+        int count = 0;
+
+        for (Object jo: jsonArr) {
+            JSONObject jsonObject = (JSONObject) jo;
+            Stock stock = catalogue.get(count);
+
+            assertEquals(stock.getName(), jsonObject.getString("company"));
+            assertTrue(stock.getCurrentValue() == jsonObject.getDouble("current value"));
+            assertTrue(stock.getAskPrice() == jsonObject.getDouble("ask value"));
+            assertTrue(stock.getBidPrice() == jsonObject.getDouble("bid value"));
+            assertTrue(stock.getPercentChange() == jsonObject.getDouble("percentage change"));
+            assertTrue(stock.getSharesPurchased() == jsonObject.getInt("shares purchased"));
+
+            count++;
+        }
 
     }
 

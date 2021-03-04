@@ -1,7 +1,11 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -13,6 +17,23 @@ public class PortfolioTest {
     @BeforeEach
     public void setUp() {
         portfolio = new Portfolio();
+    }
+
+    @Test
+    public void testAlternateConstructor() {
+        ArrayList<String> stockInfo = new ArrayList<>();
+        stockInfo.add("A");
+        stockInfo.add("B");
+
+        ArrayList<Stock> stocksOwned = new ArrayList<>();
+        stocksOwned.add(s1);
+        stocksOwned.add(s1);
+
+        portfolio = new Portfolio(10, stockInfo, stocksOwned);
+
+        assertTrue(10 == portfolio.getBalance());
+        assertEquals(stockInfo, portfolio.getStocksOwnedInfo());
+        assertEquals(stocksOwned, portfolio.getStocksOwned());
     }
 
     @Test
@@ -34,5 +55,32 @@ public class PortfolioTest {
 
         portfolio.addOrSubtractFromBalance(300);
         assertTrue(portfolio.getBalance() == portfolio.INITIAL_BALANCE - 100 + 300);
+    }
+
+    @Test
+    public void testToJson() {
+        portfolio.addStock(s1);
+        portfolio.addStock(s2);
+
+        JSONObject json = portfolio.toJson();
+        JSONArray stockInfoJsonArr = json.getJSONArray("info of stocks owned");
+        JSONArray stocksOwnedJsonArr = json.getJSONArray("stocks owned");
+
+        int count = 0; // counter for the arrays of the portfolio
+
+        for (Object s: stockInfoJsonArr) {
+            assertEquals(portfolio.getStocksOwnedInfo().get(count), s);
+            count++;
+        }
+
+        count = 0;
+
+        for (Object jo: stocksOwnedJsonArr) {
+            assertEquals(portfolio.getStocksOwned().get(count).getName(), jo);
+            count++;
+        }
+
+
+        assertTrue(portfolio.INITIAL_BALANCE == json.getDouble("account balance"));
     }
 }

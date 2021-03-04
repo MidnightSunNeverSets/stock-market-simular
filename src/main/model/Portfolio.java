@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 
 // Represents the stocks the user has purchased and their money
-public class Portfolio {
+public class Portfolio implements Writable {
 
     public static final double INITIAL_BALANCE = 100000;
 
@@ -11,10 +15,17 @@ public class Portfolio {
     private ArrayList<Stock> stocksOwned; // stores the stock owned
     private double balance;
 
+    // EFFECTS: instantiates stockInfo and stocksOwned; sets initial balance
     public Portfolio() {
         stockInfo = new ArrayList<>();
         stocksOwned = new ArrayList<>();
         balance = INITIAL_BALANCE;
+    }
+
+    public Portfolio(double balance, ArrayList<String> stockInfo, ArrayList<Stock> stocksOwned) {
+        this.balance = balance;
+        this.stockInfo = stockInfo;
+        this.stocksOwned = stocksOwned;
     }
 
     // getters
@@ -57,4 +68,34 @@ public class Portfolio {
         }
     }
 
+    // EFFECTS: returns and converts stockInfo to a JSONArray
+    private JSONArray stockInfoToJson() {
+        JSONArray jsonArr = new JSONArray();
+
+        for (String s: stockInfo) {
+            jsonArr.put(s);
+        }
+        return jsonArr;
+    }
+
+    // EFFECTS: returns and converts stocksOwned to a JSONArray
+    private JSONArray stocksOwnedToJson() {
+        JSONArray jsonArr = new JSONArray();
+        for (Stock s: stocksOwned) {
+            jsonArr.put(s.getName());
+        }
+        return jsonArr;
+    }
+
+    // EFFECTS: adds stocksOwned, stockInfo and balance to a JSONObject
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+
+        json.put("account balance", balance);
+        json.put("stocks owned", stocksOwnedToJson());
+        json.put("info of stocks owned", stockInfoToJson());
+
+        return json;
+    }
 }

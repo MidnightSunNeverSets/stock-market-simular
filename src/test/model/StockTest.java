@@ -1,5 +1,6 @@
 package model;
 
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,18 @@ class StockTest {
     public void setUp() {
         stock = new Stock("A");
     }
+
+    @Test
+    public void testAlternateConstructor() {
+        stock = new Stock("A", 10, 11, 12, 0.10, 13);
+        assertEquals("A", stock.getName());
+        assertTrue(10 == stock.getAskPrice());
+        assertTrue(11 == stock.getBidPrice());
+        assertTrue(12 == stock.getCurrentValue());
+        assertTrue(0.10 == stock.getPercentChange());
+        assertTrue(13 == stock.getSharesPurchased());
+    }
+
 
     @Test
     public void testNextDayRandomness() {
@@ -143,6 +156,18 @@ class StockTest {
         previousAsk = stock.getAskPrice();
         stock.generateAsk(false, 5);
         assertTrue(stock.getAskPrice() == (previousAsk - 5));
+
+    }
+
+    @Test
+    public void testToJson() {
+        JSONObject json = stock.toJson();
+
+        assertEquals("A", json.getString("company"));
+        assertTrue(stock.getAskPrice() == json.getDouble("ask value"));
+        assertTrue(stock.getBidPrice() == json.getDouble("bid value"));
+        assertTrue(stock.getPercentChange() == json.getDouble("percentage change"));
+        assertTrue(stock.getSharesPurchased() == json.getInt("shares purchased"));
 
     }
 
