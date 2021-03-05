@@ -3,10 +3,10 @@ package ui;
 import model.Market;
 import model.Portfolio;
 import model.Stock;
+import persistence.JsonReader;
 import persistence.JsonWriter;
-
-import java.awt.*;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Scanner;
 
 // Stock market simulator application
@@ -22,6 +22,7 @@ public class StockMarketSimulator {
     private boolean keepPlaying;
     private JsonWriter portfolioJsonWriter;
     private JsonWriter marketJsonWriter;
+    private JsonReader jsonReader;
 
     // EFFECTS: runs the simulator
     public StockMarketSimulator() {
@@ -30,6 +31,7 @@ public class StockMarketSimulator {
         portfolio = new Portfolio();
         portfolioJsonWriter = new JsonWriter(JSON_PORTFOLIO);
         marketJsonWriter = new JsonWriter(JSON_MARKET);
+        jsonReader = new JsonReader(JSON_PORTFOLIO, JSON_MARKET);
         runSimulator();
     }
 
@@ -38,6 +40,8 @@ public class StockMarketSimulator {
     private void runSimulator() {
         int command;
         keepPlaying = true;
+
+        loadPreviousData();
 
         System.out.println("The stocks available for trade are:");
         for (String s : companies) {
@@ -53,6 +57,40 @@ public class StockMarketSimulator {
 
         }
     }
+
+    // MODIFIES: this, stockMarket, portfolio
+    private void loadPreviousData() {
+        System.out.print("Would you like to continue with your progress? ");
+        System.out.print("Enter 'yes' or 'no': ");
+        String response = input.nextLine();
+
+        if (response.equals("yes")) {
+            loadMarket();
+            loadPortfolio();
+        }
+
+    }
+
+    // MODIFIES: this, stockMarket
+    private void loadMarket() {
+        try {
+            stockMarket = jsonReader.readMarket(stockMarket);
+            System.out.println("Successfully loaded previous stock market data.");
+        } catch (IOException e) {
+            System.out.println("Unable to load stock market data.");
+        }
+    }
+
+    // MODIFIES: this, portfolio
+    private void loadPortfolio() {
+        try {
+            portfolio = jsonReader.readPortfolio(stockMarket);
+            System.out.println("Successfully loaded previous portfolio data.\n");
+        } catch (IOException e) {
+            System.out.println("Unable to load previous portfolio data.");
+        }
+    }
+
 
     // EFFECTS: returns user input of what they would like to do with the simulator
     private int getCommands() {

@@ -86,18 +86,16 @@ public class JsonReader {
         ArrayList<String> stockInfo = new ArrayList<>();
         ArrayList<Stock> stocksOwned = new ArrayList<>();
 
-        // parses to stock info, objects in stockInfoJsonArr already stored as String
+        // parses to stock info
         for (Object json: stockInfoJsonArr) {
-//            JSONObject jo = (JSONObject) json;
-            stockInfo.add((String) json);
+            String info = (String) json;
+            stockInfo.add(info);
         }
 
         // parses to stocks owned, objects in stocksOwnedJsonArr already stored as String
         for (Object jo: stocksOwnedJsonArr) {
-//            JSONObject json = (JSONObject) jo;
-//            String name = (String) jo;
-
-            stocksOwned.add(market.lookUpStock((String) jo));
+            JSONObject json = (JSONObject) jo;
+            stocksOwned.add(market.lookUpStock(((JSONObject) jo).getString("name")));
         }
 
         return new Portfolio(balance, stockInfo, stocksOwned);

@@ -82,7 +82,9 @@ public class Portfolio implements Writable {
     private JSONArray stocksOwnedToJson() {
         JSONArray jsonArr = new JSONArray();
         for (Stock s: stocksOwned) {
-            jsonArr.put(s.getName());
+            JSONObject json = new JSONObject();
+            json.put("name", s.getName());
+            jsonArr.put(json);
         }
         return jsonArr;
     }

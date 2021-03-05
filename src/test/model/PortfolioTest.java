@@ -68,15 +68,16 @@ public class PortfolioTest {
 
         int count = 0; // counter for the arrays of the portfolio
 
-        for (Object s: stockInfoJsonArr) {
-            assertEquals(portfolio.getStocksOwnedInfo().get(count), s);
+        for (Object jo: stockInfoJsonArr) {
+            assertEquals(portfolio.getStocksOwnedInfo().get(count), (String) jo);
             count++;
         }
 
         count = 0;
 
         for (Object jo: stocksOwnedJsonArr) {
-            assertEquals(portfolio.getStocksOwned().get(count).getName(), jo);
+            JSONObject jsonObject = (JSONObject) jo;
+            assertEquals(portfolio.getStocksOwned().get(count).getName(), jsonObject.getString("name"));
             count++;
         }
 
