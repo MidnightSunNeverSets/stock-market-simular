@@ -110,6 +110,10 @@ public class Market implements Writable {
         return catalogue;
     }
 
+    // EFFECTS: returns names of the stocks in the market
+    public ArrayList<String> getCatalogueNames() {
+        return catalogueNames;
+    }
 
     // MODIFIES: this
     // EFFECTS: adds a stock to the market

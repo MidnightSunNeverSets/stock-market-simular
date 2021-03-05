@@ -24,7 +24,7 @@ public class StockMarketSimulator {
     private JsonWriter marketJsonWriter;
     private JsonReader jsonReader;
 
-    // EFFECTS: runs the simulator
+    // EFFECTS: runs the simulator and initializes values
     public StockMarketSimulator() {
         input = new Scanner(System.in);
         stockMarket = new Market(companies);
@@ -59,6 +59,7 @@ public class StockMarketSimulator {
     }
 
     // MODIFIES: this, stockMarket, portfolio
+    // MODIFIES: loads stockmarket and market from file
     private void loadPreviousData() {
         System.out.print("Would you like to continue with your progress? ");
         System.out.print("Enter 'yes' or 'no': ");
@@ -72,6 +73,7 @@ public class StockMarketSimulator {
     }
 
     // MODIFIES: this, stockMarket
+    // MODIFIES: loads market from file
     private void loadMarket() {
         try {
             stockMarket = jsonReader.readMarket(stockMarket);
@@ -82,6 +84,7 @@ public class StockMarketSimulator {
     }
 
     // MODIFIES: this, portfolio
+    // EFFECTS: loads porfolio from file
     private void loadPortfolio() {
         try {
             portfolio = jsonReader.readPortfolio(stockMarket);
