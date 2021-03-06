@@ -6,10 +6,10 @@ import persistence.Writable;
 
 import java.util.ArrayList;
 
-// represents the market from which stocks are purchased from, includes all the stocks
+// Represents the market from which stocks are purchased from, includes all the stocks
 public class Market implements Writable {
 
-    private ArrayList<Stock> catalogue;
+    private final ArrayList<Stock> catalogue;
     protected ArrayList<String> catalogueNames;
 
     // REQUIRES: companyNames is non-empty
@@ -41,7 +41,7 @@ public class Market implements Writable {
 
 
     // REQUIRES: orderAmount > 0, companyName is spelled correctly
-    // MODIFIES: Stock, Portfolio
+    // MODIFIES: this, portfolio
     // EFFECTS: determines the cost of the shares for purchase
     //          if user has enough balance
     //               - adds stock to portfolio
@@ -59,7 +59,7 @@ public class Market implements Writable {
         return false;
     }
 
-    // MODIFIES: this, Stock
+    // MODIFIES: this
     // EFFECTS: has the stock market go to the next day
     public void nextDay() {
         for (Stock s: catalogue) {
@@ -68,7 +68,7 @@ public class Market implements Writable {
     }
 
     // REQUIRES: company name is spelt correctly
-    // MODIFIES: this, Portfolio, Stock
+    // MODIFIES: this, portfolio
     // EFFECTS: if the stock is in the portfolio and there are sufficient shares owned:
     //               - sell the specified number of shares at the ask price
     //               - return receipt confirming transaction and number of shares sold
@@ -90,7 +90,9 @@ public class Market implements Writable {
         return "Are you sure you entered the correct company? You currently don't own any shares in " + name + ".";
     }
 
-    // EFFECTS: converts stock catalogue to a JSONArray and places it in a JSONObject
+    // EFFECTS: See interface Writable
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

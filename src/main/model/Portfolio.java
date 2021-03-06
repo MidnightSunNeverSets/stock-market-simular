@@ -22,6 +22,7 @@ public class Portfolio implements Writable {
         balance = INITIAL_BALANCE;
     }
 
+    // EFFECTS: sets balance, stockInfo and stocksOwned
     public Portfolio(double balance, ArrayList<String> stockInfo, ArrayList<Stock> stocksOwned) {
         this.balance = balance;
         this.stockInfo = stockInfo;
@@ -69,6 +70,8 @@ public class Portfolio implements Writable {
     }
 
     // EFFECTS: returns and converts stockInfo to a JSONArray
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     private JSONArray stockInfoToJson() {
         JSONArray jsonArr = new JSONArray();
 
@@ -79,6 +82,8 @@ public class Portfolio implements Writable {
     }
 
     // EFFECTS: returns and converts stocksOwned to a JSONArray
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     private JSONArray stocksOwnedToJson() {
         JSONArray jsonArr = new JSONArray();
         for (Stock s: stocksOwned) {
@@ -89,7 +94,9 @@ public class Portfolio implements Writable {
         return jsonArr;
     }
 
-    // EFFECTS: adds stocksOwned, stockInfo and balance to a JSONObject
+    // EFFECTS: see interface Writable
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

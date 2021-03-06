@@ -12,9 +12,10 @@ public class Stock implements Writable {
     protected double bidPrice;
     protected double percentChange;
 
-    private String name;
+    private final String name;
+    private final Random rand = new Random();
+
     private int sharesPurchased;
-    private Random rand = new Random();
 
     // EFFECTS: stock name set to name of company
     //          sets the current value of the stock
@@ -126,6 +127,9 @@ public class Stock implements Writable {
         }
     }
 
+    // EFFECTS: see interface writable
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

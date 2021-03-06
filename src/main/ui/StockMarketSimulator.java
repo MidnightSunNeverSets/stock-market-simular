@@ -16,13 +16,15 @@ public class StockMarketSimulator {
     private static final String JSON_MARKET = "./data/market.json";
     private final String[] companies = {"Shibe Inc.", "Papaya", "Tweety", "GuCCe", "MIYO", "Yoko"};
 
-    private Scanner input;
+    private final Scanner input;
+    private final JsonWriter portfolioJsonWriter;
+    private final JsonWriter marketJsonWriter;
+    private final JsonReader jsonReader;
+
     private Market stockMarket;
     private Portfolio portfolio;
     private boolean keepPlaying;
-    private JsonWriter portfolioJsonWriter;
-    private JsonWriter marketJsonWriter;
-    private JsonReader jsonReader;
+
 
     // EFFECTS: runs the simulator and initializes values
     public StockMarketSimulator() {
@@ -58,8 +60,8 @@ public class StockMarketSimulator {
         }
     }
 
-    // MODIFIES: this, stockMarket, portfolio
-    // MODIFIES: loads stockmarket and market from file
+    // MODIFIES: this
+    // MODIFIES: loads stockMarket and portfolio from file
     private void loadPreviousData() {
         System.out.print("Would you like to continue with your progress? ");
         System.out.print("Enter 'yes' or 'no': ");
@@ -71,29 +73,6 @@ public class StockMarketSimulator {
         }
 
     }
-
-    // MODIFIES: this, stockMarket
-    // MODIFIES: loads market from file
-    private void loadMarket() {
-        try {
-            stockMarket = jsonReader.readMarket(stockMarket);
-            System.out.println("Successfully loaded previous stock market data.");
-        } catch (IOException e) {
-            System.out.println("Unable to load stock market data.");
-        }
-    }
-
-    // MODIFIES: this, portfolio
-    // EFFECTS: loads porfolio from file
-    private void loadPortfolio() {
-        try {
-            portfolio = jsonReader.readPortfolio(stockMarket);
-            System.out.println("Successfully loaded previous portfolio data.\n");
-        } catch (IOException e) {
-            System.out.println("Unable to load previous portfolio data.");
-        }
-    }
-
 
     // EFFECTS: returns user input of what they would like to do with the simulator
     private int getCommands() {
@@ -112,7 +91,7 @@ public class StockMarketSimulator {
     }
 
     // REQUIRES: 1=< command <= 8
-    // MODIFIES: Stock, Market, Portfolio
+    // MODIFIES: this
     // EFFECTS: processes the user command
     private void processCommand(int command) {
         if (command == 1) {
@@ -128,7 +107,7 @@ public class StockMarketSimulator {
         } else if (command == 5) {
             sellShares();
         } else if (command == 6) {
-            System.out.println(portfolio.getStocksOwnedInfo());
+            System.out.println("The stocks in your portfolio are: " + portfolio.getStocksOwnedInfo() + "\n");
         } else if (command == 7) {
             stockMarket.nextDay();
             System.out.println("Ready to start a new day?");
@@ -148,6 +127,8 @@ public class StockMarketSimulator {
     }
 
     // EFFECTS: saves the market and portfolio to file
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     private void saveProgress() {
         try {
             marketJsonWriter.open();
@@ -167,6 +148,32 @@ public class StockMarketSimulator {
             System.out.println("Unable to write portfolio to file.");
         }
 
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads market from file
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    private void loadMarket() {
+        try {
+            stockMarket = jsonReader.readMarket(stockMarket);
+            System.out.println("Successfully loaded previous stock market data.");
+        } catch (IOException e) {
+            System.out.println("Unable to load stock market data.");
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads porfolio from file
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    private void loadPortfolio() {
+        try {
+            portfolio = jsonReader.readPortfolio(stockMarket);
+            System.out.println("Successfully loaded previous portfolio data.\n");
+        } catch (IOException e) {
+            System.out.println("Unable to load previous portfolio data.");
+        }
     }
 
 
@@ -209,15 +216,14 @@ public class StockMarketSimulator {
         input.nextLine();
 
         if (stockMarket.purchaseShares(companyNameResponse, sharesResponse, portfolio)) {
-            System.out.printf("Successfully purchased %d shares from %s\n", sharesResponse, companyNameResponse);
+            System.out.printf("Successfully purchased %d shares from %s\n\n", sharesResponse, companyNameResponse);
         } else {
-            System.out.println("Purchase unsuccessful. Insufficient funds. Check your account balance.");
+            System.out.println("Purchase unsuccessful. Insufficient funds. Check your account balance.\n");
         }
-        System.out.println();
     }
 
-    // REQUIRES: orderAmount > 0, companyName is spelled correctly, market and portfolio are not null
-    // MODIFIES: this, Market, Stock, Portfolio
+    // REQUIRES: orderAmount > 0, companyName is spelled correctly
+    // MODIFIES: this
     // EFFECTS: sells shares at the ask price
     private void sellShares() {
         System.out.print("Which stock would you like to sell? (Enter name of company): ");
@@ -227,8 +233,7 @@ public class StockMarketSimulator {
 
         input.nextLine();
 
-        System.out.println(stockMarket.sellShares(companyNameResponse, sharesResponse, portfolio));
-        System.out.println();
+        System.out.println(stockMarket.sellShares(companyNameResponse, sharesResponse, portfolio) + "\n");
     }
 
 }

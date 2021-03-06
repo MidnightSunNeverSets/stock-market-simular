@@ -27,8 +27,4 @@ public class JsonReaderTest {
         }
     }
 
-    @Test
-    void testEmptyMarketFile() {
-
-    }
 }

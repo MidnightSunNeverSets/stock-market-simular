@@ -13,6 +13,9 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.stream.Stream;
 
+// Represents a reader that reads portfolio and market from file
+// Citation: code obtained and modified from JsonSerializationDemo
+//           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
 public class JsonReader {
 
     private String portfolioSource;
