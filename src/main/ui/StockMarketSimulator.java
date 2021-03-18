@@ -14,7 +14,7 @@ public class StockMarketSimulator {
 
     private static final String JSON_PORTFOLIO = "./data/portfolio.json";
     private static final String JSON_MARKET = "./data/market.json";
-    private final String[] companies = {"Shibe Inc.", "Papaya", "Tweety", "GuCCe", "MIYO", "Yoko"};
+    protected final String[] companies = {"Shibe Inc.", "Papaya", "Tweety", "GuCCe", "MIYO", "Yoko"};
 
     private final Scanner input;
     private final JsonWriter portfolioJsonWriter;
@@ -34,7 +34,7 @@ public class StockMarketSimulator {
         portfolioJsonWriter = new JsonWriter(JSON_PORTFOLIO);
         marketJsonWriter = new JsonWriter(JSON_MARKET);
         jsonReader = new JsonReader(JSON_PORTFOLIO, JSON_MARKET);
-        runSimulator();
+//        runSimulator();
     }
 
     // MODIFIES: this

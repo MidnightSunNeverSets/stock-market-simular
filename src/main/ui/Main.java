@@ -74,7 +74,7 @@ public class Main extends JFrame {
 
         new Main();
 
-//        new StockMarketSimulator();
+        new StockMarketSimulator();
 
 
     }
