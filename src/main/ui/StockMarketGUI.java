@@ -13,7 +13,6 @@ import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class StockMarketGUI implements ActionListener {
 
@@ -30,6 +29,7 @@ public class StockMarketGUI implements ActionListener {
     private JPanel mainPanel;
     private JPanel purchaseAndSellPanel;
     private JPanel stockDetailPanel;
+    private JPanel allStockDetailsPanel;
 
     private JLabel background;
     private JLabel companyImage;
@@ -58,8 +58,8 @@ public class StockMarketGUI implements ActionListener {
         jsonReader = new JsonReader(JSON_PORTFOLIO, JSON_MARKET);
 
         setUpFrame();
-        createStockDetailsPanel();
-        frame.add(stockDetailPanel);
+        createAllStockDetailsPanel();
+        frame.add(allStockDetailsPanel);
         frame.pack();
     }
 
@@ -201,17 +201,36 @@ public class StockMarketGUI implements ActionListener {
 
     // MODIFIES: this
     // EFFECTS: TODO
-    private void createStockDetailsPanel() {
+    private void createAllStockDetailsPanel() {
+        allStockDetailsPanel = new JPanel();
+        GridLayout stockDetailsLayout = new GridLayout(3, 2);
+        stockDetailsLayout.setHgap(50);
+        stockDetailsLayout.setVgap(10);
+        allStockDetailsPanel.setLayout(stockDetailsLayout);
+
+        for (String s: COMPANIES) {
+            JLabel stockdetails = new JLabel(stockToString(s));
+            stockdetails.setFont(new Font("", Font.PLAIN, 20));
+            allStockDetailsPanel.add(stockdetails);
+        }
+    }
+
+
+    // MODIFIES: this
+    // EFFECTS: TODO
+    private void createStockDetailsPanel(String name) {
         stockDetailPanel = new JPanel();
-        JLabel stockDetails = new JLabel(stockToString("Papaya"));
+        JLabel stockDetails = new JLabel(stockToString(name));
+        stockDetails.setFont(new Font("", Font.PLAIN, 20));
         stockDetailPanel.add(stockDetails);
     }
 
+    // EFFECTS: returns stock details as a String
     private String stockToString(String name) {
         Stock stock = stockMarket.lookUpStock(name);
         DecimalFormat df = new DecimalFormat("0.##");
 
-        return "<html>" + name + "<br>Current Value: $" + df.format(stock.getCurrentValue()) + "<br>Bid: $"
+        return "<html><u>" + name + "</u><br>Current Value: $" + df.format(stock.getCurrentValue()) + "<br>Bid: $"
                 + df.format(stock.getBidPrice()) + "<br>Ask: $" + df.format(stock.getAskPrice()) + "<br>Spread: $"
                 + df.format(stock.getAskPrice() - stock.getBidPrice()) + "<br>Change Percentage: $"
                 + df.format(stock.getPercentChange());
