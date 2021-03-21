@@ -11,6 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,6 +31,9 @@ public class StockMarketGUI implements ActionListener {
     private JPanel purchaseAndSellPanel;
     private JPanel stockDetailPanel;
     private JPanel allStockDetailsPanel;
+    private JPanel balancePanel;
+    private JPanel portfolioPanel;
+    private JPanel backPanel;
 
     private JLabel background;
     private JLabel companyImage;
@@ -57,9 +61,13 @@ public class StockMarketGUI implements ActionListener {
         marketJsonWriter = new JsonWriter(JSON_MARKET);
         jsonReader = new JsonReader(JSON_PORTFOLIO, JSON_MARKET);
 
+        backPanel = new JPanel();
+        backPanel.add(new JButton("BACK"));
+
         setUpFrame();
-        createAllStockDetailsPanel();
-        frame.add(allStockDetailsPanel);
+        createIntroPanel();
+        frame.add(introPanel);
+        frame.add(backPanel, BorderLayout.SOUTH);
         frame.pack();
     }
 
@@ -217,7 +225,7 @@ public class StockMarketGUI implements ActionListener {
 
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: creates JPanel showcasing the stock details of a company
     private void createStockDetailsPanel(String name) {
         stockDetailPanel = new JPanel();
         JLabel stockDetails = new JLabel(stockToString(name));
@@ -237,11 +245,49 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: sets background image of the window
     private void setBackground(String fileName) {
         background = new JLabel(new ImageIcon(fileName));
         background.setLayout(new FlowLayout());
         frame.add(background);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: creates panel showcasing balance in portfolio
+    private void createBalancePanel() {
+        DecimalFormat df = new DecimalFormat("0.##");
+        balancePanel = new JPanel();
+        JLabel balanceLabel = new JLabel("$" + df.format(portfolio.getBalance()));
+        balanceLabel.setFont(new Font("", Font.PLAIN, 100));
+        balancePanel.add(balanceLabel);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: if portfolio is empty, prints out "You currently don't won any stocks."
+    //          else prints out info of stocks owned, i.e., the name and number of shares owned
+    private void createPortfolioPanel() {
+        portfolioPanel = new JPanel();
+        portfolioPanel.setLayout(new BoxLayout(portfolioPanel, BoxLayout.Y_AXIS));
+
+        ArrayList<Stock> stocksOwned = portfolio.getStocksOwned();
+        String stockInfo = "";
+        JLabel stockOwnedInfoLabel = new JLabel();
+        stockOwnedInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        if (stocksOwned.isEmpty()) {
+            stockInfo = "You currently don't own any stocks.";
+            stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 35));
+        } else {
+            for (Stock s: stocksOwned) {
+                stockInfo = stockInfo + (s.getName() + ", " + s.getSharesPurchased() + ", "
+                        + (s.getSharesPurchased() * s.getCurrentValue()) + "<br>");
+            }
+            stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 20));
+        }
+
+        stockOwnedInfoLabel.setText(stockInfo);
+        portfolioPanel.add(stockOwnedInfoLabel);
+        portfolioPanel.add(Box.createVerticalStrut(10));
     }
 
 

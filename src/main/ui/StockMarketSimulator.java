@@ -34,7 +34,7 @@ public class StockMarketSimulator {
         portfolioJsonWriter = new JsonWriter(JSON_PORTFOLIO);
         marketJsonWriter = new JsonWriter(JSON_MARKET);
         jsonReader = new JsonReader(JSON_PORTFOLIO, JSON_MARKET);
-//        runSimulator();
+        runSimulator();
     }
 
     // MODIFIES: this
