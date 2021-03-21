@@ -10,10 +10,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 public class StockMarketGUI implements ActionListener {
 
@@ -51,7 +53,6 @@ public class StockMarketGUI implements ActionListener {
     private boolean keepPlaying;
 
 
-
     // EFFECTS: sets up an interface
     public StockMarketGUI() {
         super();
@@ -62,12 +63,20 @@ public class StockMarketGUI implements ActionListener {
         jsonReader = new JsonReader(JSON_PORTFOLIO, JSON_MARKET);
 
         backPanel = new JPanel();
-        backPanel.add(new JButton("BACK"));
+        JButton backBtn = new JButton("BACK");
+        backBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchPanel(mainPanel, true);
+            }
+        });
+        backPanel.add(backBtn);
 
         setUpFrame();
         createIntroPanel();
+        createMainPanel();
+
         frame.add(introPanel);
-        frame.add(backPanel, BorderLayout.SOUTH);
         frame.pack();
     }
 
@@ -83,12 +92,52 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: sets up the frame
     private void setUpFrame() {
         frame = new JFrame("Stock Market Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
         frame.setResizable(false);
+    }
+
+    // MODIFIES: this
+    // EFFECTS: switches the current panel to the given new one
+    private void switchPanel(JPanel newPanel, boolean isMain) {
+        frame.getContentPane().removeAll();
+        frame.getContentPane().add(newPanel);
+
+        if (!isMain) {
+            frame.getContentPane().add(backPanel, BorderLayout.SOUTH);
+        }
+
+        frame.repaint();
+        frame.pack();
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads market from file
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    private void loadMarket() {
+        try {
+            stockMarket = jsonReader.readMarket(stockMarket);
+            System.out.println("Successfully loaded previous stock market data.");
+        } catch (IOException e) {
+            System.out.println("Unable to load stock market data.");
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads porfolio from file
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    private void loadPortfolio() {
+        try {
+            portfolio = jsonReader.readPortfolio(stockMarket);
+            System.out.println("Successfully loaded previous portfolio data.\n");
+        } catch (IOException e) {
+            System.out.println("Unable to load previous portfolio data.");
+        }
     }
 
     // MODIFIES: this
@@ -99,8 +148,22 @@ public class StockMarketGUI implements ActionListener {
         introPanel.setPreferredSize(new Dimension(180, 100));
 
         JButton continueGameBtn = new JButton("Continue Game"); // TODO: add action listener
+        continueGameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                loadMarket();
+                loadPortfolio();
+                switchPanel(mainPanel, true);
+                System.out.println("Market and Portfolio successfully loaded.");
+            }
+        });
         JButton newGameBtn = new JButton("New Game"); // TODO: add action listener
-
+        newGameBtn.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                switchPanel(mainPanel, true);
+            }
+        });
         introPanel.add(continueGameBtn);
         introPanel.add(newGameBtn);
     }
@@ -117,6 +180,8 @@ public class StockMarketGUI implements ActionListener {
 
         for (int i = 0; i < COMPANIES.length; i++) {
             stocksBtns[i] = new JButton(COMPANIES[i]);
+            stocksBtns[i].addActionListener(this);
+            stocksBtns[i].setName("stock listing button");
             stockListingsPanel.add(stocksBtns[i]);
         }
 
@@ -131,7 +196,7 @@ public class StockMarketGUI implements ActionListener {
 //        commandsPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
         commandsPanel.setPreferredSize(new Dimension(200, 240));
 
-        JButton[] commandBtns = new JButton[7]; // TODO: add action listener
+        JButton[] commandBtns = new JButton[7];
 
         commandBtns[0] = new JButton("SEE ALL STOCK DETAILS");
         commandBtns[1] = new JButton("SEE BALANCE");
@@ -143,6 +208,8 @@ public class StockMarketGUI implements ActionListener {
 
         commandsPanel.add(Box.createVerticalStrut(10));
         for (JButton btn : commandBtns) {
+            btn.setName("commands button");
+            btn.addActionListener(this);
             commandsPanel.add(btn);
             btn.setAlignmentX(Component.CENTER_ALIGNMENT);
             commandsPanel.add(Box.createVerticalStrut(5));
@@ -150,7 +217,7 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: creates main panel that showcases all the user commands
     private void createMainPanel() {
         createCommandsPanel();
         createStockListingsPanel();
@@ -162,7 +229,8 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: if purchase is true, creates panel for purchasing stock
+    //          else creates panel for selling stock
     private void createPurchaseOrSellPanel(boolean purchase) {
         purchaseAndSellPanel = new JPanel();
         purchaseAndSellPanel.setLayout(new BoxLayout(purchaseAndSellPanel, BoxLayout.Y_AXIS));
@@ -182,16 +250,18 @@ public class StockMarketGUI implements ActionListener {
         inputPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
 
-        JComboBox companiesBox = new JComboBox(COMPANIES); // TODO: add action listener
+        JComboBox companiesBox = new JComboBox(COMPANIES);
         companiesBox.addActionListener(this);
 
         JTextField inputField = new JTextField();
+        inputField.addActionListener(this);
         inputField.setColumns(3);
 
         JLabel stockNumQuestion = new JLabel();
         JButton inputBtn = new JButton();
+        inputBtn.addActionListener(this);
 
-        if (purchase) { // TODO: add action listener
+        if (purchase) {
             stockNumQuestion.setText("Number of Shares to Purchase: ");
             inputBtn.setText("BUY");
         } else {
@@ -208,7 +278,7 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: creates panel that showcases details of all the stocks
     private void createAllStockDetailsPanel() {
         allStockDetailsPanel = new JPanel();
         GridLayout stockDetailsLayout = new GridLayout(3, 2);
@@ -216,10 +286,10 @@ public class StockMarketGUI implements ActionListener {
         stockDetailsLayout.setVgap(10);
         allStockDetailsPanel.setLayout(stockDetailsLayout);
 
-        for (String s: COMPANIES) {
-            JLabel stockdetails = new JLabel(stockToString(s));
-            stockdetails.setFont(new Font("", Font.PLAIN, 20));
-            allStockDetailsPanel.add(stockdetails);
+        for (String s : COMPANIES) {
+            JLabel stockDetails = new JLabel(stockToString(s));
+            stockDetails.setFont(new Font("", Font.PLAIN, 20));
+            allStockDetailsPanel.add(stockDetails);
         }
     }
 
@@ -278,7 +348,7 @@ public class StockMarketGUI implements ActionListener {
             stockInfo = "You currently don't own any stocks.";
             stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 35));
         } else {
-            for (Stock s: stocksOwned) {
+            for (Stock s : stocksOwned) {
                 stockInfo = stockInfo + (s.getName() + ", " + s.getSharesPurchased() + ", "
                         + (s.getSharesPurchased() * s.getCurrentValue()) + "<br>");
             }
@@ -295,12 +365,25 @@ public class StockMarketGUI implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
         if (source instanceof JComboBox) {
-            JComboBox cb = (JComboBox)e.getSource();
-            String companyName = (String)cb.getSelectedItem();
+            JComboBox cb = (JComboBox) e.getSource();
+            String companyName = (String) cb.getSelectedItem();
             companyImage.setIcon(IMAGES.get(companyName));
         }
 
+        if (source instanceof JButton) {
+            JButton btn = (JButton) e.getSource();
+
+            if (btn.getName().equals("stock listing button")) {
+                createStockDetailsPanel(e.getActionCommand());
+                switchPanel(stockDetailPanel, false);
+            } else if (btn.getName().equals("commands button")) {
+                System.out.println("hi");
+            }
+        }
     }
+
+
+
 
     public static void main(String[] args) {
         new StockMarketGUI();
