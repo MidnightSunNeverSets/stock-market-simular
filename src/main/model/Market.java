@@ -71,24 +71,24 @@ public class Market implements Writable {
     // MODIFIES: this, portfolio
     // EFFECTS: if the stock is in the portfolio and there are sufficient shares owned:
     //               - sell the specified number of shares at the ask price
-    //               - return receipt confirming transaction and number of shares sold
+    //               - return 1
     //          else if stock is in the portfolio but the amount desiring to be sold exceeds the shares owned:
-    //               - return notice that they are selling more than they own
-    //          otherwise return statement that holder does not own shares in the specified stock
-    public String sellShares(String name, int amount, Portfolio portfolio) {
+    //               - return 2
+    //          otherwise return 3
+    public int sellShares(String name, int amount, Portfolio portfolio) {
         Stock stock = lookUpStock(name);
         if (portfolio.getStocksOwned().contains(stock)) {
             if (stock.removeShares(amount)) {
                 portfolio.addOrSubtractFromBalance(amount * stock.getAskPrice());
                 stock.removeShares(amount);
-                return amount + " shares from " + name + " have been sold.";
+                return 1;
             } else {
-                return "Are you sure you entered the correct amount? You currently don't own "
-                        + amount + " shares in " + name + ".";
+                return 2;
             }
         }
-        return "Are you sure you entered the correct company? You currently don't own any shares in " + name + ".";
+        return 3;
     }
+
 
     // EFFECTS: See interface Writable
     // Citation: method code obtained and modified from JsonSerializationDemo

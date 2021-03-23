@@ -15,7 +15,6 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 public class StockMarketGUI implements ActionListener {
 
@@ -39,6 +38,12 @@ public class StockMarketGUI implements ActionListener {
 
     private JLabel background;
     private JLabel companyImage;
+
+    private JTextField inputField;
+
+    private JComboBox companiesBox;
+
+//    private JButton inputBtn;
 
     // SIMULATOR FIELDS
     private static final String JSON_PORTFOLIO = "./data/portfolio.json";
@@ -250,15 +255,15 @@ public class StockMarketGUI implements ActionListener {
         inputPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         inputPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 15));
 
-        JComboBox companiesBox = new JComboBox(COMPANIES);
+        companiesBox = new JComboBox(COMPANIES);
         companiesBox.addActionListener(this);
 
-        JTextField inputField = new JTextField();
+        inputField = new JTextField(3);
         inputField.addActionListener(this);
-        inputField.setColumns(3);
 
         JLabel stockNumQuestion = new JLabel();
         JButton inputBtn = new JButton();
+        inputBtn.setName("input button");
         inputBtn.addActionListener(this);
 
         if (purchase) {
@@ -310,8 +315,8 @@ public class StockMarketGUI implements ActionListener {
 
         return "<html><u>" + name + "</u><br>Current Value: $" + df.format(stock.getCurrentValue()) + "<br>Bid: $"
                 + df.format(stock.getBidPrice()) + "<br>Ask: $" + df.format(stock.getAskPrice()) + "<br>Spread: $"
-                + df.format(stock.getAskPrice() - stock.getBidPrice()) + "<br>Change Percentage: $"
-                + df.format(stock.getPercentChange());
+                + df.format(stock.getAskPrice() - stock.getBidPrice()) + "<br>Change Percentage: "
+                + df.format(stock.getPercentChange()) + "%";
     }
 
     // MODIFIES: this
@@ -332,31 +337,39 @@ public class StockMarketGUI implements ActionListener {
         balancePanel.add(balanceLabel);
     }
 
+    // TODO: not working
     // MODIFIES: this
     // EFFECTS: if portfolio is empty, prints out "You currently don't won any stocks."
     //          else prints out info of stocks owned, i.e., the name and number of shares owned
     private void createPortfolioPanel() {
         portfolioPanel = new JPanel();
+        portfolioPanel.removeAll();
         portfolioPanel.setLayout(new BoxLayout(portfolioPanel, BoxLayout.Y_AXIS));
 
         ArrayList<Stock> stocksOwned = portfolio.getStocksOwned();
         String stockInfo = "";
-        JLabel stockOwnedInfoLabel = new JLabel();
-        stockOwnedInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+//        JLabel stockOwnedInfoLabel = new JLabel();
+
 
         if (stocksOwned.isEmpty()) {
             stockInfo = "You currently don't own any stocks.";
+            JLabel stockOwnedInfoLabel = new JLabel(stockInfo);
             stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 35));
+            portfolioPanel.add(stockOwnedInfoLabel);
         } else {
             for (Stock s : stocksOwned) {
-                stockInfo = stockInfo + (s.getName() + ", " + s.getSharesPurchased() + ", "
-                        + (s.getSharesPurchased() * s.getCurrentValue()) + "<br>");
+                stockInfo = stockInfo + (s.getName() + ", " + s.getSharesPurchased() + "; "
+                        + "$" + (s.getSharesPurchased() * s.getCurrentValue()));
+
+                JLabel stockOwnedInfoLabel = new JLabel(stockInfo);
+                stockOwnedInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 20));
+                portfolioPanel.add(stockOwnedInfoLabel);
+                portfolioPanel.add(Box.createVerticalStrut(10));
             }
-            stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 20));
+
         }
 
-        stockOwnedInfoLabel.setText(stockInfo);
-        portfolioPanel.add(stockOwnedInfoLabel);
         portfolioPanel.add(Box.createVerticalStrut(10));
     }
 
@@ -364,25 +377,107 @@ public class StockMarketGUI implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         Object source = e.getSource();
-        if (source instanceof JComboBox) {
-            JComboBox cb = (JComboBox) e.getSource();
+        if (source.equals(companiesBox)) {
+            JComboBox cb = (JComboBox) source;
             String companyName = (String) cb.getSelectedItem();
             companyImage.setIcon(IMAGES.get(companyName));
         }
 
         if (source instanceof JButton) {
             JButton btn = (JButton) e.getSource();
-
             if (btn.getName().equals("stock listing button")) {
                 createStockDetailsPanel(e.getActionCommand());
                 switchPanel(stockDetailPanel, false);
             } else if (btn.getName().equals("commands button")) {
-                System.out.println("hi");
+                doCommands(e);
+            } else if (btn.getName().equals("input button")) {
+                purchaseOrSellShares(e);
             }
+        }
+
+
+    }
+
+    // MODIFIES: this
+    // EFFECTS: purchases shares if user presses BUY button;
+    //          sells shares if user presses SELL button
+    private void purchaseOrSellShares(ActionEvent event) {
+        int sharesToSellOrBuy = 0;
+        try {
+            sharesToSellOrBuy = Integer.parseInt(inputField.getText());
+            String companyName = (String) companiesBox.getSelectedItem();
+
+            if (event.getActionCommand().equals("BUY")) {
+                purchaseShares(companyName, sharesToSellOrBuy);
+
+            } else {
+                sellShares(companyName, sharesToSellOrBuy);
+            }
+
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(frame, "The input you entered was invalid.", "Alert",
+                    JOptionPane.ERROR_MESSAGE);
+            // TODO: add pop up box
+        }
+    }
+
+    // MODIFIES: stockMarket, portfolio
+    // EFFECTS: purchases amount of shares from a company
+    //          if purchase is successful sends out confirmation message
+    //          else sends out alert
+    private void purchaseShares(String companyName, int sharesToBuy) {
+        boolean purchaseSuccessful = stockMarket.purchaseShares(companyName, sharesToBuy, portfolio);
+        if (purchaseSuccessful) {
+            JOptionPane.showMessageDialog(frame, sharesToBuy + " " + companyName
+                    + " shares successfully purchased.");
+        } else {
+            JOptionPane.showMessageDialog(frame, "Insufficient funds. Purchase Unsuccessful.",
+                    "Alert", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void sellShares(String companyName, int sharesToSell) {
+        int sellStatus = stockMarket.sellShares(companyName, sharesToSell, portfolio);
+
+        if (sellStatus == 1) {
+            JOptionPane.showMessageDialog(frame, sharesToSell + " " + companyName + " shares successfully sold.");
+        } else if (sellStatus == 2) {
+            JOptionPane.showConfirmDialog(frame, "You currently don't own " + sharesToSell
+                    + "shares in " + companyName + ". Would you like to sell all your shares in "
+                    + companyName + "instead?", "Warning", JOptionPane.WARNING_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(frame, "You currently don't own any shares in " + companyName + ".",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+
         }
     }
 
 
+    // MODIFIES: this
+    // EFFECTS: processes user's commands
+    private void doCommands(ActionEvent event) {
+        if (event.getActionCommand().equals("SEE ALL STOCK DETAILS")) {
+            createAllStockDetailsPanel();
+            switchPanel(allStockDetailsPanel, false);
+        } else if (event.getActionCommand().equals("SEE BALANCE")) {
+            createBalancePanel();
+            switchPanel(balancePanel, false);
+        } else if (event.getActionCommand().equals("PURCHASE SHARES")) {
+            createPurchaseOrSellPanel(true);
+            switchPanel(purchaseAndSellPanel, false);
+        } else if (event.getActionCommand().equals("SELL SHARES")) {
+            createPurchaseOrSellPanel(false);
+            switchPanel(purchaseAndSellPanel, false);
+        } else if (event.getActionCommand().equals("SEE PORTFOLIO")) {
+            createPortfolioPanel();
+            switchPanel(portfolioPanel, false);
+        } else if (event.getActionCommand().equals("START A NEW DAY")) {
+            stockMarket.nextDay();
+            JOptionPane.showMessageDialog(frame, "Time to start a new day!");
+        } else {
+            System.out.println("placeholder");
+        }
+    }
 
 
     public static void main(String[] args) {

@@ -5,6 +5,7 @@ import model.Portfolio;
 import model.Stock;
 import persistence.JsonReader;
 import persistence.JsonWriter;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Scanner;
@@ -197,7 +198,7 @@ public class StockMarketSimulator {
 
     // EFFECTS: prints stock details of all companies
     private void printAllStockDetails() {
-        for (String s: companies) {
+        for (String s : companies) {
             printStockDetails(s);
         }
         System.out.println();
@@ -222,6 +223,7 @@ public class StockMarketSimulator {
         }
     }
 
+
     // REQUIRES: orderAmount > 0, companyName is spelled correctly
     // MODIFIES: this
     // EFFECTS: sells shares at the ask price
@@ -233,7 +235,17 @@ public class StockMarketSimulator {
 
         input.nextLine();
 
-        System.out.println(stockMarket.sellShares(companyNameResponse, sharesResponse, portfolio) + "\n");
+        int sellStatus = stockMarket.sellShares(companyNameResponse, sharesResponse, portfolio);
+        if (sellStatus == 1) {
+            System.out.println(sharesResponse + " shares from " + companyNameResponse + " have been sold.");
+        } else if (sellStatus == 2) {
+            System.out.println("Are you sure you entered the correct amount? You currently don't own "
+                    + sharesResponse + " shares in " + companyNameResponse + ".");
+        } else {
+            System.out.println("Are you sure you entered the correct company? You currently don't own any shares in "
+                    + companyNameResponse + ".");
+        }
     }
+
 
 }
