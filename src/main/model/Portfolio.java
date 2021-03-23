@@ -69,6 +69,21 @@ public class Portfolio implements Writable {
         }
     }
 
+    // REQUIRES: companyName spelled correctly
+    // MODIFIES: this
+    // EFFECTS: removes specified stock and its stock info from stocksOwned and stocksOwnedInfo if it exists
+    public void removeStock(String companyName) {
+        int index = 0;
+        for (Stock s: stocksOwned) {
+            if (s.getName().equals(companyName)) {
+                index = stocksOwned.indexOf(s);
+                break;
+            }
+        }
+
+        stocksOwned.remove(index);
+    }
+
     // EFFECTS: returns and converts stockInfo to a JSONArray
     // Citation: method code obtained and modified from JsonSerializationDemo
     //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo

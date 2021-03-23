@@ -80,7 +80,12 @@ public class Market implements Writable {
         if (portfolio.getStocksOwned().contains(stock)) {
             if (stock.removeShares(amount)) {
                 portfolio.addOrSubtractFromBalance(amount * stock.getAskPrice());
-                stock.removeShares(amount);
+
+                // removes stock from portfolio when there are 0 shares owned
+                if (stock.getSharesPurchased() == 0) {
+                    portfolio.removeStock(name);
+                }
+
                 return 1;
             } else {
                 return 2;

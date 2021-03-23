@@ -337,7 +337,6 @@ public class StockMarketGUI implements ActionListener {
         balancePanel.add(balanceLabel);
     }
 
-    // TODO: not working
     // MODIFIES: this
     // EFFECTS: if portfolio is empty, prints out "You currently don't won any stocks."
     //          else prints out info of stocks owned, i.e., the name and number of shares owned
@@ -346,10 +345,8 @@ public class StockMarketGUI implements ActionListener {
         portfolioPanel.removeAll();
         portfolioPanel.setLayout(new BoxLayout(portfolioPanel, BoxLayout.Y_AXIS));
 
-        ArrayList<Stock> stocksOwned = portfolio.getStocksOwned();
         String stockInfo = "";
-//        JLabel stockOwnedInfoLabel = new JLabel();
-
+        ArrayList<Stock> stocksOwned = portfolio.getStocksOwned();
 
         if (stocksOwned.isEmpty()) {
             stockInfo = "You currently don't own any stocks.";
@@ -358,9 +355,8 @@ public class StockMarketGUI implements ActionListener {
             portfolioPanel.add(stockOwnedInfoLabel);
         } else {
             for (Stock s : stocksOwned) {
-                stockInfo = stockInfo + (s.getName() + ", " + s.getSharesPurchased() + "; "
-                        + "$" + (s.getSharesPurchased() * s.getCurrentValue()));
-
+                stockInfo = s.getName() + ", " + s.getSharesPurchased() + "; $"
+                        + (s.getSharesPurchased() * s.getCurrentValue());
                 JLabel stockOwnedInfoLabel = new JLabel(stockInfo);
                 stockOwnedInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 20));
@@ -368,9 +364,19 @@ public class StockMarketGUI implements ActionListener {
                 portfolioPanel.add(Box.createVerticalStrut(10));
             }
 
+
+//            for (int i = 0; i < stocksOwned.size(); i++) {
+//                stockInfo = stocksOwnedInfo.get(i) + "; $"
+//                        + (stocksOwned.get(i).getCurrentValue() * stocksOwned.get(i).getSharesPurchased());
+//                JLabel stockOwnedInfoLabel = new JLabel(stockInfo);
+//                stockOwnedInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+//                stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 20));
+//                portfolioPanel.add(stockOwnedInfoLabel);
+//                portfolioPanel.add(Box.createVerticalStrut(10));
+//            }
+
         }
 
-        portfolioPanel.add(Box.createVerticalStrut(10));
     }
 
 
@@ -417,7 +423,6 @@ public class StockMarketGUI implements ActionListener {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(frame, "The input you entered was invalid.", "Alert",
                     JOptionPane.ERROR_MESSAGE);
-            // TODO: add pop up box
         }
     }
 
@@ -436,20 +441,23 @@ public class StockMarketGUI implements ActionListener {
         }
     }
 
+    // MODIFIES: stockMarket, portfolio
+    // EFFECTS: if stock is in the portfolio and there are sufficient shares owned:
+    //               - sell the specified number of shares at the ask price
+    //               - give confirmation message
+    //          else if stock is in the portfolio but the amount desiring to be sold exceeds the shares owned:
+    //               - give option to sell all shares of that stock
+    //          otherwise give error message
     private void sellShares(String companyName, int sharesToSell) {
         int sellStatus = stockMarket.sellShares(companyName, sharesToSell, portfolio);
 
         if (sellStatus == 1) {
             JOptionPane.showMessageDialog(frame, sharesToSell + " " + companyName + " shares successfully sold.");
-        } else if (sellStatus == 2) {
-            JOptionPane.showConfirmDialog(frame, "You currently don't own " + sharesToSell
-                    + "shares in " + companyName + ". Would you like to sell all your shares in "
-                    + companyName + "instead?", "Warning", JOptionPane.WARNING_MESSAGE);
         } else {
-            JOptionPane.showMessageDialog(frame, "You currently don't own any shares in " + companyName + ".",
-                    "Error", JOptionPane.ERROR_MESSAGE);
-
+            JOptionPane.showMessageDialog(frame, "You currently don't own the specified amount of shares.",
+                    "Alert", JOptionPane.ERROR_MESSAGE);
         }
+
     }
 
 
