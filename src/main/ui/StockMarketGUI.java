@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+// GUI interface for Stock Market Simulator
 public class StockMarketGUI implements ActionListener {
 
     // GUI COMPONENTS
@@ -149,7 +150,7 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: creates starting panel, with options to continue or start a new game
     private void createIntroPanel() {
         introPanel = new JPanel();
         introPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 10));
@@ -177,12 +178,11 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: creates panel showcasing the available stocks for purchase
     private void createStockListingsPanel() {
         stockListingsPanel = new JPanel();
-        JButton[] stocksBtns = new JButton[COMPANIES.length]; // TODO: add action listener
+        JButton[] stocksBtns = new JButton[COMPANIES.length];
         JLabel listings = new JLabel("Current Stock Listings: ");
-//        stockListingsPanel.setPreferredSize(new Dimension(620, 40));
 
         stockListingsPanel.add(listings);
 
@@ -196,7 +196,7 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: TODO
+    // EFFECTS: creates panel containing all the possible user commands
     private void createCommandsPanel() {
         commandsPanel = new JPanel();
 
@@ -252,6 +252,7 @@ public class StockMarketGUI implements ActionListener {
         purchaseAndSellPanel.add(companyImage);
     }
 
+    // MODIFIES: this
     // EFFECTS: creates the input textfield, label and button for purchasing shares
     private JPanel createPurchaseAndSellInputPanel(boolean purchase) {
         JPanel inputPanel = new JPanel();
@@ -480,6 +481,7 @@ public class StockMarketGUI implements ActionListener {
     }
 
     // MODIFIES: this
+    // EFFECTS: Gives option to save progress and exits the program
     private void endGame() {
         int response = JOptionPane.showConfirmDialog(frame, "Would you like to save your progress?",
                 "Bye!", JOptionPane.YES_NO_OPTION);
