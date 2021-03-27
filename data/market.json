@@ -1,0 +1,50 @@
+{"stock catalogue": [
+  {
+    "shares purchased": 0,
+    "percentage change": 0,
+    "current value": 497.2,
+    "company": "Shibe Inc.",
+    "bid value": 362.15,
+    "ask value": 632.24
+  },
+  {
+    "shares purchased": 0,
+    "percentage change": 0,
+    "current value": 2.13,
+    "company": "Papaya",
+    "bid value": 1.29,
+    "ask value": 2.96
+  },
+  {
+    "shares purchased": 2,
+    "percentage change": 0,
+    "current value": 364.97,
+    "company": "Tweety",
+    "bid value": 227.02,
+    "ask value": 502.92
+  },
+  {
+    "shares purchased": 0,
+    "percentage change": 0,
+    "current value": 940.3,
+    "company": "GuCCe",
+    "bid value": 917.83,
+    "ask value": 962.77
+  },
+  {
+    "shares purchased": 0,
+    "percentage change": 0,
+    "current value": 403.97,
+    "company": "MIYO",
+    "bid value": 332.35,
+    "ask value": 475.58
+  },
+  {
+    "shares purchased": 0,
+    "percentage change": 0,
+    "current value": 393.3,
+    "company": "Yoko",
+    "bid value": 168.33,
+    "ask value": 618.27
+  }
+]}

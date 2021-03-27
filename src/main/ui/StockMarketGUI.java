@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.Map;
 public class StockMarketGUI implements ActionListener {
 
     // GUI COMPONENTS
-    private static final String[] COMPANIES = {"Shibe Inc.", "Papaya", "Tweety", "GuCCe", "MIYO", "Yoko"};
+    private static final String[] COMPANIES = {"Shibe Inc.", "Papaya", "Tweety", "panDASH", "MIYO", "Yoko"};
     private static final String BACKGROUND_IMAGE = "./data/bouncy cat.gif";
     private static final Map<String, ImageIcon> IMAGES = createImageMap();
 
@@ -85,13 +86,15 @@ public class StockMarketGUI implements ActionListener {
         frame.pack();
     }
 
-    // EFFECTS: returns map of all the images used
+    // EFFECTS: adds images photos used to a Map and returns it
     private static Map<String, ImageIcon> createImageMap() {
         Map<String, ImageIcon> imageMap = new HashMap<>();
         imageMap.put(COMPANIES[0], new ImageIcon("./data/shibe.png"));
-        imageMap.put("Papaya", new ImageIcon("./data/papaya.png"));
-        imageMap.put("Tweety", new ImageIcon("./data/seagull.png"));
-
+        imageMap.put(COMPANIES[1], new ImageIcon("./data/papaya.png"));
+        imageMap.put(COMPANIES[2], new ImageIcon("./data/seagull.png"));
+        imageMap.put(COMPANIES[3], new ImageIcon("./data/raccoonface.png"));
+        imageMap.put(COMPANIES[4], new ImageIcon("./data/cat.png"));
+        imageMap.put(COMPANIES[5], new ImageIcon("./data/yogurt.png"));
 
         return imageMap;
     }
@@ -179,7 +182,7 @@ public class StockMarketGUI implements ActionListener {
         stockListingsPanel = new JPanel();
         JButton[] stocksBtns = new JButton[COMPANIES.length]; // TODO: add action listener
         JLabel listings = new JLabel("Current Stock Listings: ");
-        stockListingsPanel.setPreferredSize(new Dimension(620, 40));
+//        stockListingsPanel.setPreferredSize(new Dimension(620, 40));
 
         stockListingsPanel.add(listings);
 
@@ -363,18 +366,6 @@ public class StockMarketGUI implements ActionListener {
                 portfolioPanel.add(stockOwnedInfoLabel);
                 portfolioPanel.add(Box.createVerticalStrut(10));
             }
-
-
-//            for (int i = 0; i < stocksOwned.size(); i++) {
-//                stockInfo = stocksOwnedInfo.get(i) + "; $"
-//                        + (stocksOwned.get(i).getCurrentValue() * stocksOwned.get(i).getSharesPurchased());
-//                JLabel stockOwnedInfoLabel = new JLabel(stockInfo);
-//                stockOwnedInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-//                stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 20));
-//                portfolioPanel.add(stockOwnedInfoLabel);
-//                portfolioPanel.add(Box.createVerticalStrut(10));
-//            }
-
         }
 
     }
@@ -409,6 +400,7 @@ public class StockMarketGUI implements ActionListener {
     //          sells shares if user presses SELL button
     private void purchaseOrSellShares(ActionEvent event) {
         int sharesToSellOrBuy = 0;
+
         try {
             sharesToSellOrBuy = Integer.parseInt(inputField.getText());
             String companyName = (String) companiesBox.getSelectedItem();
@@ -483,8 +475,42 @@ public class StockMarketGUI implements ActionListener {
             stockMarket.nextDay();
             JOptionPane.showMessageDialog(frame, "Time to start a new day!");
         } else {
-            System.out.println("placeholder");
+            endGame();
         }
+    }
+
+    // MODIFIES: this
+    private void endGame() {
+        int response = JOptionPane.showConfirmDialog(frame, "Would you like to save your progress?",
+                "Bye!", JOptionPane.YES_NO_OPTION);
+        if (response == JOptionPane.YES_OPTION) {
+            saveProgress();
+        }
+        frame.dispose();
+    }
+
+    // EFFECTS: saves the market and portfolio to file
+    // Citation: method code obtained and modified from JsonSerializationDemo
+    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
+    private void saveProgress() {
+        try {
+            marketJsonWriter.open();
+            marketJsonWriter.write(stockMarket);
+            marketJsonWriter.close();
+            System.out.println("Saved market.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write market to file.");
+        }
+
+        try {
+            portfolioJsonWriter.open();
+            portfolioJsonWriter.write(portfolio);
+            portfolioJsonWriter.close();
+            System.out.println("Saved portfolio.");
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write portfolio to file.");
+        }
+
     }
 
 
