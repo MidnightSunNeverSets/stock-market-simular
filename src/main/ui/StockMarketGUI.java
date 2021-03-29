@@ -22,7 +22,6 @@ public class StockMarketGUI implements ActionListener {
 
     // GUI COMPONENTS
     private static final String[] COMPANIES = {"Shibe Inc.", "Papaya", "Tweety", "panDASH", "MIYO", "Yoko"};
-    private static final String BACKGROUND_IMAGE = "./data/bouncy cat.gif";
     private static final Map<String, ImageIcon> IMAGES = createImageMap();
 
     private JFrame frame;
@@ -323,13 +322,6 @@ public class StockMarketGUI implements ActionListener {
                 + df.format(stock.getPercentChange()) + "%";
     }
 
-    // MODIFIES: this
-    // EFFECTS: sets background image of the window
-    private void setBackground(String fileName) {
-        background = new JLabel(new ImageIcon(fileName));
-        background.setLayout(new FlowLayout());
-        frame.add(background);
-    }
 
     // MODIFIES: this
     // EFFECTS: creates panel showcasing balance in portfolio
