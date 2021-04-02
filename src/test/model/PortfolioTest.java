@@ -31,7 +31,7 @@ public class PortfolioTest {
 
         portfolio = new Portfolio(10, stockInfo, stocksOwned);
 
-        assertTrue(10 == portfolio.getBalance());
+        assertEquals(portfolio.getBalance(), 10);
         assertEquals(stockInfo, portfolio.getStocksOwnedInfo());
         assertEquals(stocksOwned, portfolio.getStocksOwned());
     }
@@ -51,10 +51,10 @@ public class PortfolioTest {
     @Test
     public void addOrSubtractFromBalance() {
         portfolio.addOrSubtractFromBalance(-100);
-        assertTrue(portfolio.getBalance() == portfolio.INITIAL_BALANCE - 100);
+        assertEquals(Portfolio.INITIAL_BALANCE - 100, portfolio.getBalance());
 
         portfolio.addOrSubtractFromBalance(300);
-        assertTrue(portfolio.getBalance() == portfolio.INITIAL_BALANCE - 100 + 300);
+        assertEquals(Portfolio.INITIAL_BALANCE - 100 + 300, portfolio.getBalance());
     }
 
     @Test
@@ -69,7 +69,7 @@ public class PortfolioTest {
         int count = 0; // counter for the arrays of the portfolio
 
         for (Object jo: stockInfoJsonArr) {
-            assertEquals(portfolio.getStocksOwnedInfo().get(count), (String) jo);
+            assertEquals(portfolio.getStocksOwnedInfo().get(count), jo);
             count++;
         }
 
@@ -82,6 +82,6 @@ public class PortfolioTest {
         }
 
 
-        assertTrue(portfolio.INITIAL_BALANCE == json.getDouble("account balance"));
+        assertEquals(json.getDouble("account balance"), Portfolio.INITIAL_BALANCE);
     }
 }

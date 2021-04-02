@@ -18,11 +18,11 @@ class StockTest {
     public void testAlternateConstructor() {
         stock = new Stock("A", 10, 11, 12, 0.10, 13);
         assertEquals("A", stock.getName());
-        assertTrue(10 == stock.getAskPrice());
-        assertTrue(11 == stock.getBidPrice());
-        assertTrue(12 == stock.getCurrentValue());
-        assertTrue(0.10 == stock.getPercentChange());
-        assertTrue(13 == stock.getSharesPurchased());
+        assertEquals(stock.getAskPrice(), 10);
+        assertEquals(stock.getBidPrice(), 11);
+        assertEquals(stock.getCurrentValue(), 12);
+        assertEquals(stock.getPercentChange(), 0.10);
+        assertEquals(stock.getSharesPurchased(), 13);
     }
 
 
@@ -48,8 +48,8 @@ class StockTest {
             previousBid = stock.getBidPrice();
         }
 
-        assertFalse(timesBidChanged == 0);
-        assertFalse(timesAskChanged == 0);
+        assertNotEquals(timesBidChanged, 0);
+        assertNotEquals(timesAskChanged, 0);
 
     }
 
@@ -79,7 +79,7 @@ class StockTest {
             stock = new Stock("B");
         }
 
-        assertTrue(timesBidIsGreaterThanAsk == 10);
+        assertEquals(timesBidIsGreaterThanAsk, 10);
 
         stock.nextDay();
 
@@ -90,10 +90,10 @@ class StockTest {
     @Test
     public void testPurchaseShares() {
         stock.purchaseShares(1);
-        assertTrue(1 == stock.getSharesPurchased());
+        assertEquals(stock.getSharesPurchased(), 1);
 
         stock.purchaseShares(9);
-        assertTrue(10 == stock.getSharesPurchased());
+        assertEquals(stock.getSharesPurchased(), 10);
     }
 
     @Test
@@ -102,18 +102,18 @@ class StockTest {
 
         // when there are sufficient shares
         assertTrue(stock.removeShares(10));
-        assertTrue(stock.getSharesPurchased() == 90);
+        assertEquals(stock.getSharesPurchased(), 90);
 
         assertTrue(stock.removeShares(90));
-        assertTrue(stock.getSharesPurchased() == 0);
+        assertEquals(stock.getSharesPurchased(), 0);
 
         // when there are insufficient shares
         assertFalse(stock.removeShares(5));
-        assertTrue(0 == stock.getSharesPurchased());
+        assertEquals(stock.getSharesPurchased(), 0);
 
         stock.purchaseShares(20);
         assertFalse(stock.removeShares(21));
-        assertTrue(20 == stock.getSharesPurchased());
+        assertEquals(stock.getSharesPurchased(), 20);
     }
 
 
@@ -128,7 +128,6 @@ class StockTest {
         assertTrue(stock.getBidPrice() < stock.getAskPrice());
 
         // when rise in bid is greater than spread
-        previousBid = stock.getBidPrice();
         stock.generateBid(true, spread + 10);
         assertTrue(stock.getBidPrice() < stock.getAskPrice());
 
@@ -136,12 +135,12 @@ class StockTest {
         spread = stock.getAskPrice() - stock.getBidPrice();
         previousBid = stock.getBidPrice();
         stock.generateBid(true, spread - 2);
-        assertTrue(stock.getBidPrice() == (previousBid + (spread - 2)));
+        assertEquals((previousBid + (spread - 2)), stock.getBidPrice());
 
         // when bid decreases
         previousBid = stock.getBidPrice();
         stock.generateBid(false, spread);
-        assertTrue(stock.getBidPrice() == (previousBid - spread));
+        assertEquals((previousBid - spread), stock.getBidPrice());
     }
 
     @Test
@@ -150,12 +149,12 @@ class StockTest {
 
         // rise in ask
         stock.generateAsk(true, 5);
-        assertTrue(stock.getAskPrice() == (previousAsk + 5));
+        assertEquals((previousAsk + 5), stock.getAskPrice());
 
         // decrease in ask
         previousAsk = stock.getAskPrice();
         stock.generateAsk(false, 5);
-        assertTrue(stock.getAskPrice() == (previousAsk - 5));
+        assertEquals((previousAsk - 5), stock.getAskPrice());
 
     }
 
@@ -164,10 +163,10 @@ class StockTest {
         JSONObject json = stock.toJson();
 
         assertEquals("A", json.getString("company"));
-        assertTrue(stock.getAskPrice() == json.getDouble("ask value"));
-        assertTrue(stock.getBidPrice() == json.getDouble("bid value"));
-        assertTrue(stock.getPercentChange() == json.getDouble("percentage change"));
-        assertTrue(stock.getSharesPurchased() == json.getInt("shares purchased"));
+        assertEquals(json.getDouble("ask value"), stock.getAskPrice());
+        assertEquals(json.getDouble("bid value"), stock.getBidPrice());
+        assertEquals(json.getDouble("percentage change"), stock.getPercentChange());
+        assertEquals(json.getInt("shares purchased"), stock.getSharesPurchased());
 
     }
 

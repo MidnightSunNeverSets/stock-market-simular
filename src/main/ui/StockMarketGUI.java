@@ -35,9 +35,8 @@ public class StockMarketGUI implements ActionListener {
     private JPanel allStockDetailsPanel;
     private JPanel balancePanel;
     private JPanel portfolioPanel;
-    private JPanel backPanel;
+    private final JPanel backPanel;
 
-    private JLabel background;
     private JLabel companyImage;
 
     private JTextField inputField;
@@ -56,8 +55,6 @@ public class StockMarketGUI implements ActionListener {
 
     private Market stockMarket;
     private Portfolio portfolio;
-    private boolean keepPlaying;
-
 
     // EFFECTS: sets up an interface
     public StockMarketGUI() {
@@ -341,7 +338,7 @@ public class StockMarketGUI implements ActionListener {
         portfolioPanel.removeAll();
         portfolioPanel.setLayout(new BoxLayout(portfolioPanel, BoxLayout.Y_AXIS));
 
-        String stockInfo = "";
+        String stockInfo;
         ArrayList<Stock> stocksOwned = portfolio.getStocksOwned();
 
         if (stocksOwned.isEmpty()) {
@@ -392,7 +389,7 @@ public class StockMarketGUI implements ActionListener {
     // EFFECTS: purchases shares if user presses BUY button;
     //          sells shares if user presses SELL button
     private void purchaseOrSellShares(ActionEvent event) {
-        int sharesToSellOrBuy = 0;
+        int sharesToSellOrBuy;
 
         try {
             sharesToSellOrBuy = Integer.parseInt(inputField.getText());

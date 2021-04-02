@@ -11,8 +11,8 @@ public class Portfolio implements Writable {
 
     public static final double INITIAL_BALANCE = 100000;
 
-    private ArrayList<String> stockInfo; // stores the info of the stock owned
-    private ArrayList<Stock> stocksOwned; // stores the stock owned
+    private final ArrayList<String> stockInfo; // stores the info of the stock owned
+    private final ArrayList<Stock> stocksOwned; // stores the stock owned
     private double balance;
 
     // EFFECTS: instantiates stockInfo and stocksOwned; sets initial balance

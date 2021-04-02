@@ -23,8 +23,8 @@ public class MarketTest {
     @Test
     public void testAlternateConstructor() {
         market = new Market();
-        assertTrue(market.getCatalogue().size() == 0);
-        assertTrue(market.catalogueNames.size() == 0);
+        assertEquals(market.getCatalogue().size(), 0);
+        assertEquals(market.catalogueNames.size(), 0);
     }
 
     @Test
@@ -40,7 +40,7 @@ public class MarketTest {
         Stock stock = market.lookUpStock("a");
 
         assertTrue(market.purchaseShares("a", 10, portfolio));
-        assertTrue(stock.getSharesPurchased() == 10);
+        assertEquals(10, stock.getSharesPurchased());
     }
 
     @Test
@@ -49,8 +49,8 @@ public class MarketTest {
 
         portfolio.addOrSubtractFromBalance(-9000);
         assertFalse(market.purchaseShares("b", 100000, portfolio));
-        assertTrue(portfolio.getBalance() == (portfolio.INITIAL_BALANCE - 9000));
-        assertTrue(stock.getSharesPurchased() == 0);
+        assertEquals(Portfolio.INITIAL_BALANCE - 9000, portfolio.getBalance());
+        assertEquals(0, stock.getSharesPurchased());
     }
 
     @Test
@@ -59,14 +59,13 @@ public class MarketTest {
 
         portfolio.setBalance(stock.getAskPrice());
         assertTrue(market.purchaseShares("b", 1, portfolio));
-        assertTrue(stock.getSharesPurchased() == 1);
+        assertEquals(1, stock.getSharesPurchased());
     }
 
     @Test
     public void testNextDay() {
         String[] names = new String[0];
         Market wellBehavedMarket = new Market(names);
-        ArrayList<Stock> catalogue = wellBehavedMarket.getCatalogue();
 
         WellBehavedStock s1 = new WellBehavedStock("a");
         s1.setAskPrice(5);
@@ -86,14 +85,14 @@ public class MarketTest {
 
         wellBehavedMarket.nextDay();
 
-        assertTrue(s1.getAskPrice() == 6);
-        assertTrue(s1.bidPrice == 3);
+        assertEquals(6, s1.getAskPrice());
+        assertEquals(3, s1.bidPrice);
 
-        assertTrue(s2.getAskPrice() == 11);
-        assertTrue(s2.getBidPrice() == 6);
+        assertEquals(11, s2.getAskPrice());
+        assertEquals(6, s2.getBidPrice());
 
-        assertTrue(s3.getAskPrice() == 101);
-        assertTrue(s3.getBidPrice() == 89);
+        assertEquals(101, s3.getAskPrice());
+        assertEquals(89, s3.getBidPrice());
 
     }
 
@@ -112,8 +111,8 @@ public class MarketTest {
 
         // when there are sufficient shares owned
         assertTrue(market.sellShares("a", 2, portfolio));
-        assertTrue(s1.getSharesPurchased() == 0);
-        assertTrue(portfolio.getBalance() == (previousBalance + s1.getAskPrice() * 2));
+        assertEquals(s1.getSharesPurchased(), 0);
+        assertEquals((previousBalance + s1.getAskPrice() * 2), portfolio.getBalance());
 
 
         // when there are insufficient shares owned
@@ -121,13 +120,13 @@ public class MarketTest {
 
         market.sellShares("b", 4, portfolio);
         assertFalse(market.sellShares("b", 4, portfolio));
-        assertTrue(s2.getSharesPurchased() == 3);
-        assertTrue(portfolio.getBalance() == previousBalance);
+        assertEquals(s2.getSharesPurchased(), 3);
+        assertEquals(previousBalance, portfolio.getBalance());
 
         // when no shares are owned
         assertFalse(market.sellShares("c", 3, portfolio));
-        assertTrue(s3.getSharesPurchased() == 0);
-        assertTrue(portfolio.getBalance() == previousBalance);
+        assertEquals(s3.getSharesPurchased(), 0);
+        assertEquals(previousBalance, portfolio.getBalance());
 
     }
 
@@ -137,7 +136,7 @@ public class MarketTest {
         JSONArray jsonArr = json.getJSONArray("stock catalogue");
         ArrayList<Stock> catalogue = market.getCatalogue();
 
-        assertTrue(jsonArr.length() == 3);
+        assertEquals(jsonArr.length(), 3);
 
         int count = 0;
 
@@ -146,18 +145,18 @@ public class MarketTest {
             Stock stock = catalogue.get(count);
 
             assertEquals(stock.getName(), jsonObject.getString("company"));
-            assertTrue(stock.getCurrentValue() == jsonObject.getDouble("current value"));
-            assertTrue(stock.getAskPrice() == jsonObject.getDouble("ask value"));
-            assertTrue(stock.getBidPrice() == jsonObject.getDouble("bid value"));
-            assertTrue(stock.getPercentChange() == jsonObject.getDouble("percentage change"));
-            assertTrue(stock.getSharesPurchased() == jsonObject.getInt("shares purchased"));
+            assertEquals(jsonObject.getDouble("current value"), stock.getCurrentValue());
+            assertEquals(jsonObject.getDouble("ask value"), stock.getAskPrice());
+            assertEquals(jsonObject.getDouble("bid value"), stock.getBidPrice());
+            assertEquals(jsonObject.getDouble("percentage change"), stock.getPercentChange());
+            assertEquals(jsonObject.getInt("shares purchased"), stock.getSharesPurchased());
 
             count++;
         }
 
     }
 
-    private class WellBehavedStock extends Stock {
+    private static class WellBehavedStock extends Stock {
 
         // EFFECTS:
         public WellBehavedStock(String name) {
