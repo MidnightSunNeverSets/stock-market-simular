@@ -434,9 +434,9 @@ public class StockMarketGUI implements ActionListener {
     //               - give option to sell all shares of that stock
     //          otherwise give error message
     private void sellShares(String companyName, int sharesToSell) {
-        int sellStatus = stockMarket.sellShares(companyName, sharesToSell, portfolio);
+        boolean sellStatus = stockMarket.sellShares(companyName, sharesToSell, portfolio);
 
-        if (sellStatus == 1) {
+        if (sellStatus) {
             JOptionPane.showMessageDialog(frame, sharesToSell + " " + companyName + " shares successfully sold.");
         } else {
             JOptionPane.showMessageDialog(frame, "You currently don't own the specified amount of shares.",

@@ -71,11 +71,9 @@ public class Market implements Writable {
     // MODIFIES: this, portfolio
     // EFFECTS: if the stock is in the portfolio and there are sufficient shares owned:
     //               - sell the specified number of shares at the ask price
-    //               - return 1
-    //          else if stock is in the portfolio but the amount desiring to be sold exceeds the shares owned:
-    //               - return 2
-    //          otherwise return 3
-    public int sellShares(String name, int amount, Portfolio portfolio) {
+    //               - return true
+    //          else return false
+    public boolean sellShares(String name, int amount, Portfolio portfolio) {
         Stock stock = lookUpStock(name);
         if (portfolio.getStocksOwned().contains(stock)) {
             if (stock.removeShares(amount)) {
@@ -86,12 +84,10 @@ public class Market implements Writable {
                     portfolio.removeStock(name);
                 }
 
-                return 1;
-            } else {
-                return 2;
+                return true;
             }
         }
-        return 3;
+        return false;
     }
 
 

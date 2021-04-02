@@ -235,12 +235,9 @@ public class StockMarketSimulator {
 
         input.nextLine();
 
-        int sellStatus = stockMarket.sellShares(companyNameResponse, sharesResponse, portfolio);
-        if (sellStatus == 1) {
+        boolean sellStatus = stockMarket.sellShares(companyNameResponse, sharesResponse, portfolio);
+        if (sellStatus) {
             System.out.println(sharesResponse + " shares from " + companyNameResponse + " have been sold.");
-        } else if (sellStatus == 2) {
-            System.out.println("Are you sure you entered the correct amount? You currently don't own "
-                    + sharesResponse + " shares in " + companyNameResponse + ".");
         } else {
             System.out.println("Are you sure you entered the correct company? You currently don't own any shares in "
                     + companyNameResponse + ".");

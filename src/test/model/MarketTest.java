@@ -111,7 +111,7 @@ public class MarketTest {
         previousBalance = portfolio.getBalance();
 
         // when there are sufficient shares owned
-        assertEquals("2 shares from a have been sold.", market.sellShares("a", 2, portfolio));
+        assertTrue(market.sellShares("a", 2, portfolio));
         assertTrue(s1.getSharesPurchased() == 0);
         assertTrue(portfolio.getBalance() == (previousBalance + s1.getAskPrice() * 2));
 
@@ -120,14 +120,12 @@ public class MarketTest {
         previousBalance = portfolio.getBalance();
 
         market.sellShares("b", 4, portfolio);
-        assertEquals("Are you sure you entered the correct amount? You currently don't own 4 shares in b.",
-                market.sellShares("b", 4, portfolio));
+        assertFalse(market.sellShares("b", 4, portfolio));
         assertTrue(s2.getSharesPurchased() == 3);
         assertTrue(portfolio.getBalance() == previousBalance);
 
         // when no shares are owned
-        assertEquals("Are you sure you entered the correct company? You currently don't own any shares in c.",
-                market.sellShares("c", 3, portfolio));
+        assertFalse(market.sellShares("c", 3, portfolio));
         assertTrue(s3.getSharesPurchased() == 0);
         assertTrue(portfolio.getBalance() == previousBalance);
 
