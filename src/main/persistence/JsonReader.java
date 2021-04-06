@@ -82,26 +82,18 @@ public class JsonReader {
     // MODIFIES: portfolio, market, stock
     // EFFECTS: parses portfolio from JSONObject and returns it
     private Portfolio parsePortfolio(Market market, JSONObject jsonObject) {
-        JSONArray stockInfoJsonArr = jsonObject.getJSONArray("info of stocks owned");
         JSONArray stocksOwnedJsonArr = jsonObject.getJSONArray("stocks owned");
 
         double balance = Math.round(jsonObject.getDouble("account balance") * 100.0) / 100.0;
-        ArrayList<String> stockInfo = new ArrayList<>();
         ArrayList<Stock> stocksOwned = new ArrayList<>();
-
-        // parses to stock info
-        for (Object json: stockInfoJsonArr) {
-            String info = (String) json;
-            stockInfo.add(info);
-        }
 
         // parses to stocks owned, objects in stocksOwnedJsonArr already stored as String
         for (Object jo: stocksOwnedJsonArr) {
             JSONObject json = (JSONObject) jo;
-            stocksOwned.add(market.lookUpStock(((JSONObject) jo).getString("name")));
+            stocksOwned.add(market.lookUpStock((json).getString("name")));
         }
 
-        return new Portfolio(balance, stockInfo, stocksOwned);
+        return new Portfolio(balance, stocksOwned);
     }
 
 

@@ -21,18 +21,13 @@ public class PortfolioTest {
 
     @Test
     public void testAlternateConstructor() {
-        ArrayList<String> stockInfo = new ArrayList<>();
-        stockInfo.add("A");
-        stockInfo.add("B");
-
         ArrayList<Stock> stocksOwned = new ArrayList<>();
         stocksOwned.add(s1);
         stocksOwned.add(s1);
 
-        portfolio = new Portfolio(10, stockInfo, stocksOwned);
+        portfolio = new Portfolio(10, stocksOwned);
 
         assertEquals(portfolio.getBalance(), 10);
-        assertEquals(stockInfo, portfolio.getStocksOwnedInfo());
         assertEquals(stocksOwned, portfolio.getStocksOwned());
     }
 
@@ -41,15 +36,18 @@ public class PortfolioTest {
         portfolio.addStock(s1);
         portfolio.addStock(s2);
 
-        assertEquals(s1.getName() + ", " + s1.getSharesPurchased(), portfolio.getStocksOwnedInfo().get(0));
-        assertEquals(s2.getName() + ", " + s1.getSharesPurchased(), portfolio.getStocksOwnedInfo().get(1));
+        assertEquals(portfolio.getStocksOwned().get(0), s1);
+        assertEquals(portfolio.getStocksOwned().get(1), s2);
 
         portfolio.addStock(s1);
-        assertEquals(2, portfolio.getStocksOwnedInfo().size());
+        assertEquals(portfolio.getStocksOwned().size(), 2);
+        assertEquals(portfolio.getStocksOwned().get(0), s1);
+        assertEquals(portfolio.getStocksOwned().get(1), s2);
+
     }
 
     @Test
-    public void addOrSubtractFromBalance() {
+    public void testAddOrSubtractFromBalance() {
         portfolio.addOrSubtractFromBalance(-100);
         assertEquals(Portfolio.INITIAL_BALANCE - 100, portfolio.getBalance());
 
@@ -58,22 +56,19 @@ public class PortfolioTest {
     }
 
     @Test
+    public void testRemoveStock() {
+
+    }
+
+    @Test
     public void testToJson() {
         portfolio.addStock(s1);
         portfolio.addStock(s2);
 
         JSONObject json = portfolio.toJson();
-        JSONArray stockInfoJsonArr = json.getJSONArray("info of stocks owned");
         JSONArray stocksOwnedJsonArr = json.getJSONArray("stocks owned");
 
         int count = 0; // counter for the arrays of the portfolio
-
-        for (Object jo: stockInfoJsonArr) {
-            assertEquals(portfolio.getStocksOwnedInfo().get(count), jo);
-            count++;
-        }
-
-        count = 0;
 
         for (Object jo: stocksOwnedJsonArr) {
             JSONObject jsonObject = (JSONObject) jo;

@@ -11,31 +11,24 @@ public class Portfolio implements Writable {
 
     public static final double INITIAL_BALANCE = 100000;
 
-    private final ArrayList<String> stockInfo; // stores the info of the stock owned
     private final ArrayList<Stock> stocksOwned; // stores the stock owned
     private double balance;
 
-    // EFFECTS: instantiates stockInfo and stocksOwned; sets initial balance
+    // EFFECTS: instantiates stocksOwned; sets initial balance
     public Portfolio() {
-        stockInfo = new ArrayList<>();
         stocksOwned = new ArrayList<>();
         balance = INITIAL_BALANCE;
     }
 
-    // EFFECTS: sets balance, stockInfo and stocksOwned
-    public Portfolio(double balance, ArrayList<String> stockInfo, ArrayList<Stock> stocksOwned) {
+    // EFFECTS: sets balance and stocksOwned
+    public Portfolio(double balance, ArrayList<Stock> stocksOwned) {
         this.balance = balance;
-        this.stockInfo = stockInfo;
         this.stocksOwned = stocksOwned;
     }
 
     // getters
     public double getBalance() {
         return balance;
-    }
-
-    public ArrayList<String> getStocksOwnedInfo() {
-        return stockInfo;
     }
 
     public ArrayList<Stock> getStocksOwned() {
@@ -57,14 +50,8 @@ public class Portfolio implements Writable {
 
     // MODIFIES: this
     // EFFECTS: if stock not in portfolio, adds new entry
-    //          if stock already in, updates the shares information
-    //          entry in format: Company Name Number of Shares
     public void addStock(Stock stock) {
-        if (stocksOwned.contains(stock)) {
-            int index = stocksOwned.indexOf(stock);
-            stockInfo.set(index, stock.getName() + ", " + stock.getSharesPurchased());
-        } else {
-            stockInfo.add(stock.getName() + ", " + stock.getSharesPurchased());
+        if (!stocksOwned.contains(stock)) {
             stocksOwned.add(stock);
         }
     }
@@ -77,22 +64,10 @@ public class Portfolio implements Writable {
         for (Stock s: stocksOwned) {
             if (s.getName().equals(companyName)) {
                 index = stocksOwned.indexOf(s);
+                stocksOwned.remove(index);
                 break;
             }
         }
-        stocksOwned.remove(index);
-    }
-
-    // EFFECTS: returns and converts stockInfo to a JSONArray
-    // Citation: method code obtained and modified from JsonSerializationDemo
-    //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
-    private JSONArray stockInfoToJson() {
-        JSONArray jsonArr = new JSONArray();
-
-        for (String s: stockInfo) {
-            jsonArr.put(s);
-        }
-        return jsonArr;
     }
 
     // EFFECTS: returns and converts stocksOwned to a JSONArray
@@ -117,7 +92,6 @@ public class Portfolio implements Writable {
 
         json.put("account balance", balance);
         json.put("stocks owned", stocksOwnedToJson());
-        json.put("info of stocks owned", stockInfoToJson());
 
         return json;
     }

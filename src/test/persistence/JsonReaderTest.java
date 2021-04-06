@@ -1,8 +1,6 @@
 package persistence;
 
 import model.Market;
-import model.Portfolio;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -20,7 +18,7 @@ public class JsonReaderTest {
         reader = new JsonReader("./data/noPortfolioFile", "./data/noMarketFile");
         Market market = new Market(lst);
         try {
-            Portfolio portfolio = reader.readPortfolio(market);
+            reader.readPortfolio(market);
             fail("Expected IOException not thrown");
         } catch (IOException e) {
             // pass

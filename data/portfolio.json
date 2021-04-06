@@ -1,8 +1,4 @@
 {
   "stocks owned": [{"name": "Shibe Inc."}],
-  "account balance": 99285.65,
-  "info of stocks owned": [
-    "Shibe Inc., 1",
-    "Shibe Inc., 5"
-  ]
+  "account balance": 99285.65
 }

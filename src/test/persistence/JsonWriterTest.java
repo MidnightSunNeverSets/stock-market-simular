@@ -46,11 +46,10 @@ public class JsonWriterTest {
             portfolio = jsonReader.readPortfolio(market);
 
             // checks that correct info was written
-            assertTrue(market.getCatalogue().size() == 0);
-            assertTrue(market.getCatalogueNames().size() == 0);
-            assertTrue(portfolio.INITIAL_BALANCE == portfolio.getBalance());
-            assertTrue(portfolio.getStocksOwned().size() == 0);
-            assertTrue(portfolio.getStocksOwnedInfo().size() == 0);
+            assertEquals(market.getCatalogue().size(), 0);
+            assertEquals(market.getCatalogueNames().size(), 0);
+            assertEquals(portfolio.getBalance(), Portfolio.INITIAL_BALANCE);
+            assertEquals(portfolio.getStocksOwned().size(), 0);
 
         } catch (IOException e) {
             fail("Unexpected IOException caught");
@@ -88,17 +87,17 @@ public class JsonWriterTest {
 
             // checks that correct info was written
             Stock readStock = market.getCatalogue().get(0);
-            assertTrue(market.getCatalogueNames().size() == 1);
+            assertEquals(market.getCatalogueNames().size(), 1);
             assertEquals("a", readStock.getName());
-            assertTrue(stock.getCurrentValue() == readStock.getCurrentValue());
-            assertTrue(stock.getAskPrice() == readStock.getAskPrice());
-            assertTrue(stock.getBidPrice() == readStock.getBidPrice());
-            assertTrue(stock.getPercentChange() == readStock.getPercentChange());
-            assertTrue(stock.getSharesPurchased() == readStock.getSharesPurchased());
+            assertEquals(readStock.getCurrentValue(), stock.getCurrentValue());
+            assertEquals(readStock.getAskPrice(), stock.getAskPrice());
+            assertEquals(readStock.getBidPrice(), stock.getBidPrice());
+            assertEquals(readStock.getPercentChange(), stock.getPercentChange());
+            assertEquals(readStock.getSharesPurchased(), stock.getSharesPurchased());
 
-            assertTrue(market.getCatalogue().size() == 1);
+            assertEquals(market.getCatalogue().size(), 1);
             assertEquals("a", market.getCatalogueNames().get(0));
-            assertTrue(portfolio.getBalance() == (portfolio.INITIAL_BALANCE - 2 * stock.getAskPrice()));
+            assertEquals((Portfolio.INITIAL_BALANCE - 2 * stock.getAskPrice()), portfolio.getBalance());
 
         } catch (IOException e) {
             fail("Unexpected IOException caught");

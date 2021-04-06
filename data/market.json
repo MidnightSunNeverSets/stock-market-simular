@@ -1,50 +1,50 @@
 {"stock catalogue": [
   {
     "shares purchased": 5,
-    "percentage change": 0,
-    "current value": 132.21,
+    "percentage change": 0.61,
+    "current value": 133.01,
     "company": "Shibe Inc.",
-    "bid value": 121.55,
-    "ask value": 142.87
+    "bid value": 122.35,
+    "ask value": 143.66
   },
   {
     "shares purchased": 0,
-    "percentage change": 0,
-    "current value": 329.01,
+    "percentage change": 0.17,
+    "current value": 329.57,
     "company": "Papaya",
-    "bid value": 243.92,
-    "ask value": 414.1
+    "bid value": 246.14999999999998,
+    "ask value": 412.98
   },
   {
     "shares purchased": 0,
-    "percentage change": 0,
-    "current value": 697.98,
+    "percentage change": -0.16,
+    "current value": 696.84,
     "company": "Tweety",
-    "bid value": 677.76,
-    "ask value": 718.19
+    "bid value": 678.37,
+    "ask value": 715.3100000000001
   },
   {
     "shares purchased": 0,
-    "percentage change": 0,
-    "current value": 176.37,
+    "percentage change": -0.83,
+    "current value": 174.9,
     "company": "panDASH",
-    "bid value": 166.06,
-    "ask value": 186.68
+    "bid value": 163.38,
+    "ask value": 186.42000000000002
   },
   {
     "shares purchased": 0,
-    "percentage change": 0,
-    "current value": 291.87,
+    "percentage change": 0.42,
+    "current value": 293.09,
     "company": "MIYO",
-    "bid value": 232.96,
-    "ask value": 350.78
+    "bid value": 235.91,
+    "ask value": 350.27
   },
   {
     "shares purchased": 0,
-    "percentage change": 0,
-    "current value": 572.6,
+    "percentage change": -0.11,
+    "current value": 571.96,
     "company": "Yoko",
-    "bid value": 428.01,
-    "ask value": 717.19
+    "bid value": 427,
+    "ask value": 716.9200000000001
   }
 ]}

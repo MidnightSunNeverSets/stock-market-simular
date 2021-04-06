@@ -131,6 +131,18 @@ public class MarketTest {
     }
 
     @Test
+    public void testSellAllShares() {
+        Stock stock = market.lookUpStock("a");
+
+        assertFalse(portfolio.getStocksOwned().contains(stock));
+        market.purchaseShares("a", 2, portfolio);
+        assertTrue(market.sellShares("a", 2, portfolio));
+        assertEquals(0, stock.getSharesPurchased());
+        assertEquals(100000, Portfolio.INITIAL_BALANCE);
+        assertFalse(portfolio.getStocksOwned().contains(stock));
+    }
+
+    @Test
     public void testToJson() {
         JSONObject json = market.toJson();
         JSONArray jsonArr = json.getJSONArray("stock catalogue");
