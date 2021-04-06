@@ -40,8 +40,4 @@ single Map implementation instead, where the company name is the key and the cor
 I would also like to refactor the StockMarketGUI class. The class is involved with creating both the GUI components and
 implementing the functionality of the simulator. Therefore, to increase cohesion, I could extract all the methods
 and fields dealing with the simulator to a separate class, using an association to the new class to implement the 
-simulator functionality in the GUI. 
-
-
-
-
+simulator functionality in the GUI.
