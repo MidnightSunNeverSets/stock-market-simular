@@ -60,11 +60,9 @@ public class Portfolio implements Writable {
     // MODIFIES: this
     // EFFECTS: removes specified stock and its stock info from stocksOwned and stocksOwnedInfo if it exists
     public void removeStock(String companyName) {
-        int index = 0;
         for (Stock s: stocksOwned) {
             if (s.getName().equals(companyName)) {
-                index = stocksOwned.indexOf(s);
-                stocksOwned.remove(index);
+                stocksOwned.remove(s);
                 break;
             }
         }

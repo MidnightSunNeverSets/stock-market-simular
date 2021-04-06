@@ -133,7 +133,6 @@ public class MarketTest {
     @Test
     public void testSellAllShares() {
         Stock stock = market.lookUpStock("a");
-
         assertFalse(portfolio.getStocksOwned().contains(stock));
         market.purchaseShares("a", 2, portfolio);
         assertTrue(market.sellShares("a", 2, portfolio));

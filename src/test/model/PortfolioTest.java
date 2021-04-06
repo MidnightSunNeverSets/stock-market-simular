@@ -57,7 +57,16 @@ public class PortfolioTest {
 
     @Test
     public void testRemoveStock() {
+        portfolio.addStock(s1);
+        portfolio.addStock(s2);
 
+        // removing stock that exists
+        portfolio.removeStock("A");
+        assertFalse(portfolio.getStocksOwned().contains(s1));
+
+        // removing stock that doesn't exist
+        portfolio.removeStock("C");
+        assertEquals(portfolio.getStocksOwned().size(), 1);
     }
 
     @Test
