@@ -12,12 +12,17 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MarketTest {
     Market market;
     Portfolio portfolio;
+    Stock s1, s2, s3;
 
     @BeforeEach
     public void setUp() {
         String[] companies = {"a", "b", "c"};
         portfolio = new Portfolio();
         market = new Market(companies);
+        s1 = market.getCatalogue().get(0);
+        s2 = market.getCatalogue().get(1);
+        s3 = market.getCatalogue().get(2);
+
     }
 
     @Test
@@ -29,10 +34,8 @@ public class MarketTest {
 
     @Test
     public void testLookUpStock() {
-        ArrayList<Stock> catalogue = market.getCatalogue();
-
-        assertEquals(catalogue.get(0), market.lookUpStock("a"));
-        assertEquals(catalogue.get(1), market.lookUpStock("b"));
+        assertEquals(s1, market.lookUpStock("a"));
+        assertEquals(s2, market.lookUpStock("b"));
     }
 
     @Test
@@ -98,12 +101,8 @@ public class MarketTest {
 
     @Test
     public void testSellShares() {
-        Stock s1 = market.lookUpStock("a");
-        Stock s2 = market.lookUpStock("b");
-        Stock s3 = market.lookUpStock("c");
 
         double previousBalance;
-
         market.purchaseShares("a", 2, portfolio);
         market.purchaseShares("b", 3, portfolio);
 
@@ -114,31 +113,31 @@ public class MarketTest {
         assertEquals(s1.getSharesPurchased(), 1);
         assertEquals(previousBalance + s1.getAskPrice(), portfolio.getBalance());
 
+    }
 
-        // when there are insufficient shares owned
-        previousBalance = portfolio.getBalance();
+    @Test
+    public void testSellInsufficientShares() {
+        market.purchaseShares("b", 2, portfolio);
+        double previousBalance = portfolio.getBalance();
 
-        market.sellShares("b", 4, portfolio);
         assertFalse(market.sellShares("b", 4, portfolio));
-        assertEquals(s2.getSharesPurchased(), 3);
+        assertEquals(s2.getSharesPurchased(), 2);
         assertEquals(previousBalance, portfolio.getBalance());
 
         // when no shares are owned
         assertFalse(market.sellShares("c", 3, portfolio));
         assertEquals(s3.getSharesPurchased(), 0);
         assertEquals(previousBalance, portfolio.getBalance());
-
     }
 
     @Test
     public void testSellAllShares() {
-        Stock stock = market.lookUpStock("a");
-        assertFalse(portfolio.getStocksOwned().contains(stock));
+        assertFalse(portfolio.getStocksOwned().contains(s1));
         market.purchaseShares("a", 2, portfolio);
         assertTrue(market.sellShares("a", 2, portfolio));
-        assertEquals(0, stock.getSharesPurchased());
+        assertEquals(0, s1.getSharesPurchased());
         assertEquals(100000, Portfolio.INITIAL_BALANCE);
-        assertFalse(portfolio.getStocksOwned().contains(stock));
+        assertFalse(portfolio.getStocksOwned().contains(s1));
     }
 
     @Test
