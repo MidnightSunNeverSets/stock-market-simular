@@ -36,7 +36,7 @@ public class JsonReader {
 
     // EFFECTS: reads market from file and returns it; throws IOException if there is an error when
     //          reading from file
-    public Market readMarket(Market market) throws IOException {
+    public Market readMarket() throws IOException {
         String jsonData = readFile(marketSource);
         JSONObject json = new JSONObject(jsonData);
 

@@ -42,7 +42,7 @@ public class JsonWriterTest {
             // reads market and portfolio from file
             JsonReader jsonReader = new JsonReader("./data/testWriteStandardPortfolio",
                     "./data/testWriteStandardMarket");
-            market = jsonReader.readMarket(market);
+            market = jsonReader.readMarket();
             portfolio = jsonReader.readPortfolio(market);
 
             // checks that correct info was written
@@ -83,7 +83,7 @@ public class JsonWriterTest {
             // reads market and portfolio from file
             JsonReader jsonReader = new JsonReader("./data/testWriteAdjustedPortfolio",
                     "./data/testWriteAdjustedMarket");
-            market = jsonReader.readMarket(market);
+            market = jsonReader.readMarket();
             portfolio = jsonReader.readPortfolio(market);
 
             // checks that correct info was written

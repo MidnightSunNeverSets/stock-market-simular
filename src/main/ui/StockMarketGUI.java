@@ -125,7 +125,7 @@ public class StockMarketGUI implements ActionListener {
     //           https://github.students.cs.ubc.ca/CPSC210/JsonSerializationDemo
     private void loadMarket() {
         try {
-            stockMarket = jsonReader.readMarket(stockMarket);
+            stockMarket = jsonReader.readMarket();
             System.out.println("Successfully loaded previous stock market data.");
         } catch (IOException e) {
             System.out.println("Unable to load stock market data.");
@@ -348,8 +348,8 @@ public class StockMarketGUI implements ActionListener {
             portfolioPanel.add(stockOwnedInfoLabel);
         } else {
             for (Stock s : stocksOwned) {
-                stockInfo = s.getName() + ", " + s.getSharesPurchased() + "; $"
-                        + (s.getSharesPurchased() * s.getCurrentValue());
+                double value = Math.round(s.getSharesPurchased() * s.getCurrentValue() * 100.0) / 100.0;
+                stockInfo = s.getName() + ", " + s.getSharesPurchased() + "; $" + value;
                 JLabel stockOwnedInfoLabel = new JLabel(stockInfo);
                 stockOwnedInfoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 stockOwnedInfoLabel.setFont(new Font("", Font.PLAIN, 20));
