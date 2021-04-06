@@ -69,10 +69,10 @@ public class JsonReader {
     // EFFECTS: parses stock info from JSON object into stock and adds it into market
     private void addStock(Market market, JSONObject jsonObject) {
         String name = jsonObject.getString("company");
-        double percentageChange = jsonObject.getDouble("percentage change");
-        double currentValue = jsonObject.getDouble("current value");
-        double bidValue = jsonObject.getDouble("bid value");
-        double askValue = jsonObject.getDouble("ask value");
+        double percentageChange = Math.round(jsonObject.getDouble("percentage change") * 100.0) / 100.0;
+        double currentValue =  Math.round(jsonObject.getDouble("current value") * 100.0) / 100.0;
+        double bidValue = Math.round(jsonObject.getDouble("bid value") * 100.0) / 100.0;
+        double askValue = Math.round(jsonObject.getDouble("ask value") * 100.0) / 100.0;
         int sharesPurchased = jsonObject.getInt("shares purchased");
 
         // adds stock to the catalogue
@@ -85,7 +85,7 @@ public class JsonReader {
         JSONArray stockInfoJsonArr = jsonObject.getJSONArray("info of stocks owned");
         JSONArray stocksOwnedJsonArr = jsonObject.getJSONArray("stocks owned");
 
-        double balance = jsonObject.getDouble("account balance");
+        double balance = Math.round(jsonObject.getDouble("account balance") * 100.0) / 100.0;
         ArrayList<String> stockInfo = new ArrayList<>();
         ArrayList<Stock> stocksOwned = new ArrayList<>();
 
