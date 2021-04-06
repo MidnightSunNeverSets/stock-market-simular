@@ -110,9 +110,9 @@ public class MarketTest {
         previousBalance = portfolio.getBalance();
 
         // when there are sufficient shares owned
-        assertTrue(market.sellShares("a", 2, portfolio));
-        assertEquals(s1.getSharesPurchased(), 0);
-        assertEquals((previousBalance + s1.getAskPrice() * 2), portfolio.getBalance());
+        assertTrue(market.sellShares("a", 1, portfolio));
+        assertEquals(s1.getSharesPurchased(), 1);
+        assertEquals(previousBalance + s1.getAskPrice(), portfolio.getBalance());
 
 
         // when there are insufficient shares owned
