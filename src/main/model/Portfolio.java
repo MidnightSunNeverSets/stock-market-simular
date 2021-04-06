@@ -80,7 +80,6 @@ public class Portfolio implements Writable {
                 break;
             }
         }
-
         stocksOwned.remove(index);
     }
 

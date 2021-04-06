@@ -504,7 +504,6 @@ public class StockMarketGUI implements ActionListener {
 
     }
 
-
     public static void main(String[] args) {
         new StockMarketGUI();
     }

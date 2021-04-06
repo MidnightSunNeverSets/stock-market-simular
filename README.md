@@ -28,3 +28,20 @@ just without the parts involving actual financial ruin.
 - As a user, I want to be able to forward the stock market to the next day
 - As a user, I want to be able to save my portfolio when I exit
 - As a user, I want to be able to choose between reloading my portfolio or starting a new one
+
+## Phase 4: Task 2
+- Made use of the Map interface in the StockMarketGUI class. 
+
+## Phase 4: Task 3
+Given more time, one of the things I would like to change is the ArrayList fields in the Market class that store the
+company names and available stocks. As each name corresponds to a single stock, it would be more efficient to use a 
+single Map implementation instead, where the company name is the key and the corresponding stock is the value. 
+
+I would also like to refactor the StockMarketGUI class. The class is involved with creating both the GUI components and
+implementing the functionality of the simulator. Therefore, to increase cohesion, I could extract all the methods
+and fields dealing with the simulator to a separate class, using an association to the new class to implement the 
+simulator functionality in the GUI. 
+
+
+
+

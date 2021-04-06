@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 // Represents the market from which stocks are purchased from, includes all the stocks
 public class Market implements Writable {
-
     private final ArrayList<Stock> catalogue;
     protected ArrayList<String> catalogueNames;
 
